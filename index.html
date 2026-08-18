@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Flavour Restaurant & Cafe — modern restaurant website.">
+  <title>The Flavour | Restaurant & Cafe</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#171411;
+      --ink-soft:#4c463f;
+      --cream:#f8f4ee;
+      --paper:#ffffff;
+      --warm:#f2ebe2;
+      --gold:#d7a44f;
+      --gold-soft:#efc77d;
+      --line:#e8e0d7;
+      --shadow:0 18px 45px rgba(25,20,14,.10);
+      --container:1180px;
+      --r-xl:26px;
+      --r-lg:18px;
+      --r-md:14px;
+      --ease:280ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"DM Sans",sans-serif;
+      color:var(--ink);
+      background:var(--paper);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+    button{border:0;cursor:pointer}
+    img{display:block;width:100%;object-fit:cover}
+
+    .container{width:min(var(--container),calc(100% - 36px));margin:auto}
+
+    /* NAV */
+    .topbar{
+      position:fixed;
+      inset:0 0 auto 0;
+      z-index:1000;
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.45);
+      transition:background var(--ease),box-shadow var(--ease);
+    }
+    .topbar.scrolled{background:rgba(255,255,255,.96);box-shadow:0 8px 30px rgba(28,21,14,.07)}
+    .nav{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .brand{display:inline-flex;align-items:center;gap:10px;min-width:0}
+    .brand-mark{
+      width:40px;height:40px;border-radius:50%;
+      display:grid;place-items:center;
+      background:var(--ink);color:#fff;font-size:14px;font-weight:800;
+      box-shadow:0 8px 20px rgba(0,0,0,.12);
+    }
+    .brand-text{font-family:"Playfair Display",serif;font-size:1.25rem;font-weight:700;white-space:nowrap}
+    .brand-sub{display:block;font-size:.54rem;letter-spacing:.18em;color:#7a726b;text-transform:uppercase;font-family:"DM Sans",sans-serif;margin-top:-2px}
+    .nav-links{display:flex;align-items:center;gap:24px}
+    .nav-links a{
+      font-weight:600;font-size:.9rem;color:#312b26;position:relative;padding:5px 0;
+    }
+    .nav-links a::after{
+      content:"";position:absolute;left:0;bottom:-3px;width:0;height:2px;border-radius:99px;background:var(--gold);
+      transition:width var(--ease);
+    }
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .nav-actions{display:flex;gap:8px}
+    .nav-btn{
+      min-height:44px;padding:0 16px;border-radius:11px;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:.84rem;transition:transform var(--ease),box-shadow var(--ease),background var(--ease);
+    }
+    .nav-btn:hover{transform:translateY(-2px)}
+    .nav-btn.dark{background:var(--ink);color:#fff}
+    .nav-btn.gold{background:var(--gold);color:#17120d}
+    .mobile-toggle{
+      display:none;width:42px;height:42px;border-radius:11px;
+      background:#fff;border:1px solid var(--line);color:var(--ink);
+    }
+
+    /* HERO */
+    .hero{
+      min-height:610px;
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      align-items:end;
+      background:#0d0b09;
+    }
+    .hero-slides{position:absolute;inset:0}
+    .hero-slide{
+      position:absolute;inset:0;opacity:0;transform:scale(1.06);
+      transition:opacity 900ms ease,transform 1200ms cubic-bezier(.16,.7,.2,1);
+    }
+    .hero-slide.active{opacity:1;transform:scale(1)}
+    .hero-slide::after{
+      content:"";position:absolute;inset:0;
+      background:
+        linear-gradient(90deg,rgba(10,9,7,.78) 0%,rgba(10,9,7,.42) 48%,rgba(10,9,7,.18) 100%),
+        linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.56));
+    }
+    .hero-slide img{height:100%;object-fit:cover}
+    .hero-content{
+      position:relative;z-index:2;
+      padding:140px 0 82px;
+      max-width:760px;
+      color:#fff;
+      animation:heroIn .95s both;
+    }
+    .eyebrow{
+      color:var(--gold-soft);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:.74rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+    .hero h1{
+      font:700 clamp(3rem,7vw,6.3rem)/.94 "Playfair Display",serif;
+      letter-spacing:-.035em;
+      margin-bottom:16px;
+    }
+    .hero p{
+      max-width:580px;
+      font-size:1rem;
+      color:rgba(255,255,255,.88);
+      margin-bottom:22px;
+    }
+    .hero-actions{display:flex;flex-wrap:wrap;gap:9px}
+    .cta{
+      min-height:48px;padding:0 18px;border-radius:11px;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:.86rem;
+      transition:transform var(--ease),box-shadow var(--ease),background var(--ease),border-color var(--ease);
+    }
+    .cta:hover{transform:translateY(-3px)}
+    .cta.gold{background:var(--gold);color:#1a140f;box-shadow:0 12px 28px rgba(215,164,79,.2)}
+    .cta.clear{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.42);backdrop-filter:blur(10px)}
+    .hero-mini{
+      display:flex;gap:15px;align-items:center;flex-wrap:wrap;margin-top:18px;
+      font-size:.78rem;color:rgba(255,255,255,.8)
+    }
+    .hero-dots{
+      position:absolute;right:0;bottom:34px;z-index:3;
+      display:flex;gap:7px;align-items:center;
+    }
+    .dot{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.42);transition:width var(--ease),background var(--ease)}
+    .dot.active{width:22px;background:var(--gold)}
+    .hero-arrow{
+      width:42px;height:42px;border-radius:50%;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#fff;
+      transition:transform var(--ease),background var(--ease);
+    }
+    .hero-arrow:hover{transform:translateY(-2px);background:rgba(255,255,255,.15)}
+
+    /* SECTION HELPERS */
+    .section{padding:66px 0}
+    .section.alt{background:var(--cream)}
+    .section-head{
+      display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:28px;
+    }
+    .section-head h2{
+      font:700 clamp(2rem,3.7vw,3.4rem)/1.05 "Playfair Display",serif;
+    }
+    .section-head p{max-width:540px;color:var(--ink-soft);font-size:.9rem}
+    .section-title-kicker{
+      color:#a67b2e;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;margin-bottom:8px;
+    }
+    .view-all{font-size:.8rem;font-weight:800;color:#6b625a;white-space:nowrap}
+    .view-all:hover{color:var(--gold)}
+
+    /* QUICK NAV */
+    .quick-nav{
+      background:var(--paper);
+      border-bottom:1px solid var(--line);
+      position:sticky;top:74px;z-index:800;
+    }
+    .quick-wrap{min-height:52px;display:flex;align-items:center;justify-content:center;gap:32px}
+    .quick-wrap a{font-size:.8rem;font-weight:700;color:#5e5750;transition:color var(--ease)}
+    .quick-wrap a:hover{color:var(--ink)}
+
+    /* CATEGORIES */
+    .category-row{
+      display:grid;grid-template-columns:repeat(8,1fr);gap:9px;
+    }
+    .category-card{
+      border:1px solid var(--line);
+      border-radius:13px;
+      overflow:hidden;
+      background:#fff;
+      transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);
+    }
+    .category-card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#ddc9ae}
+    .category-card img{aspect-ratio:1.15/1;transition:transform 550ms cubic-bezier(.2,.7,.2,1)}
+    .category-card:hover img{transform:scale(1.06)}
+    .category-name{padding:9px 9px 10px;text-align:center;font-size:.76rem;font-weight:800}
+    .category-loading,.popular-empty{grid-column:1/-1;text-align:center;padding:32px;border:1px dashed var(--line);border-radius:16px;color:#766d65;background:#fff}
+
+    /* POPULAR */
+    .popular-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .dish{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 25px rgba(24,17,10,.05);
+      transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease);
+    }
+    .dish:hover{transform:translateY(-7px);box-shadow:var(--shadow);border-color:#dcc7a8}
+    .dish-img{position:relative;overflow:hidden}
+    .dish-img img{aspect-ratio:1.1/1;transition:transform 650ms cubic-bezier(.2,.7,.2,1)}
+    .dish:hover .dish-img img{transform:scale(1.08)}
+    .dish-heart{
+      position:absolute;right:9px;top:9px;width:31px;height:31px;border-radius:50%;
+      background:rgba(255,255,255,.9);color:#6c625b;border:1px solid rgba(0,0,0,.05);
+    }
+    .dish-body{padding:14px}
+    .dish-name{font:700 1rem/1.15 "Playfair Display",serif;margin-bottom:5px}
+    .dish-desc{font-size:.73rem;color:#7a7169;min-height:34px}
+    .dish-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px}
+    .dish-rating{font-size:.7rem;color:#8a651e}
+    .dish-price{font-weight:800;font-size:.82rem}
+    .dish-actions{display:flex;gap:7px;margin-top:10px}
+    .dish-btn{
+      min-height:36px;border-radius:9px;padding:0 10px;font-size:.72rem;font-weight:800;
+      transition:transform var(--ease),background var(--ease);
+    }
+    .dish-btn:hover{transform:translateY(-2px)}
+    .dish-btn.add{flex:1;background:var(--gold);color:#1a140f}
+    .dish-btn.more{background:var(--warm);color:#4d453d}
+
+    /* ORDER STRIP */
+    .order-strip{
+      position:relative;overflow:hidden;
+      min-height:170px;border-radius:20px;
+      display:flex;align-items:center;
+      padding:26px 30px;
+      background:
+        linear-gradient(90deg,rgba(16,13,10,.92),rgba(16,13,10,.42)),
+        url("https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1600&q=88") center/cover;
+      color:#fff;
+      box-shadow:var(--shadow);
+    }
+    .order-strip h2{font:700 clamp(1.9rem,3.7vw,3rem)/1.05 "Playfair Display",serif;margin-bottom:7px}
+    .order-strip p{color:rgba(255,255,255,.8);font-size:.86rem;max-width:550px;margin-bottom:14px}
+
+    /* WHY */
+    .why-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .why-card{padding:20px;border-right:1px solid var(--line);background:#fff;transition:background var(--ease)}
+    .why-card:last-child{border-right:0}
+    .why-card:hover{background:#fffaf4}
+    .why-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#f7eee1;color:#9f742c;margin-bottom:10px}
+    .why-card h3{font:700 1.02rem "Playfair Display",serif;margin-bottom:4px}
+    .why-card p{font-size:.72rem;color:#7b726b}
+
+    /* BOOKING */
+    .booking{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+    .booking-media{min-height:445px;border-radius:18px;overflow:hidden;position:relative}
+    .booking-media img{height:100%}
+    .booking-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.42))}
+    .booking-caption{position:absolute;left:18px;right:18px;bottom:18px;z-index:2;color:#fff}
+    .booking-caption h3{font:700 1.65rem "Playfair Display",serif}
+    .booking-caption p{font-size:.78rem;color:rgba(255,255,255,.82)}
+    .booking-form{
+      padding:25px;border-radius:18px;background:#fff;border:1px solid var(--line);
+    }
+    .booking-form h2{font:700 2.35rem/1.02 "Playfair Display",serif;margin-bottom:7px}
+    .booking-form>p{font-size:.78rem;color:#786f67;margin-bottom:18px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .field.full{grid-column:1/-1}
+    .field label{display:block;font-size:.7rem;font-weight:800;color:#5d544c;margin-bottom:5px}
+    .field input,.field select,.field textarea{
+      width:100%;padding:10px 11px;border-radius:9px;border:1px solid var(--line);outline:none;background:#fff;color:var(--ink);font-size:.79rem;
+      transition:border-color var(--ease),box-shadow var(--ease);
+    }
+    .field textarea{min-height:88px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.12)}
+    .booking-submit{width:100%;min-height:43px;margin-top:11px;border-radius:10px;background:var(--gold);color:#18130f;font-size:.8rem;font-weight:800}
+
+    /* ABOUT */
+    .about{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
+    .about-image{border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+    .about-image img{aspect-ratio:1.15/1;transition:transform 800ms cubic-bezier(.2,.7,.2,1)}
+    .about-image:hover img{transform:scale(1.04)}
+    .about-copy h2{font:700 clamp(2.2rem,4vw,3.4rem)/1.04 "Playfair Display",serif;margin-bottom:12px}
+    .about-copy p{color:#6e655d;font-size:.9rem;margin-bottom:10px}
+    .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
+    .about-stat{padding:13px;border:1px solid var(--line);border-radius:11px;background:#fff}
+    .about-stat strong{display:block;font-size:1.25rem;color:#9b6e27;line-height:1}
+    .about-stat span{display:block;color:#857a71;font-size:.67rem;margin-top:4px}
+
+    /* TESTIMONIALS */
+    .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .review{padding:19px;background:#fff;border:1px solid var(--line);border-radius:14px}
+    .review-stars{color:#9b6e27;font-size:.75rem;margin-bottom:9px}
+    .review p{font-size:.78rem;color:#6e655d;margin-bottom:13px}
+    .review-actions{display:flex;justify-content:flex-end;margin:-8px 0 18px}
+    .review-btn{min-height:40px;padding:0 14px;border-radius:10px;background:var(--gold);color:#17120d;font-size:.72rem;font-weight:800;transition:transform var(--ease),box-shadow var(--ease)}
+    .review-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(215,164,79,.18)}
+    .review-form-wrap{display:none;margin-bottom:18px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#fff}
+    .review-form-wrap.show{display:block;animation:heroIn .45s ease both}
+    .review-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .review-field.full{grid-column:1/-1}
+    .review-field label{display:block;font-size:.69rem;font-weight:800;color:#5d544c;margin-bottom:5px}
+    .review-field input,.review-field select,.review-field textarea{width:100%;padding:10px 11px;border-radius:9px;border:1px solid var(--line);outline:none;background:#fff;color:var(--ink);font-size:.76rem}
+    .review-field textarea{min-height:92px;resize:vertical}
+    .review-field input:focus,.review-field select:focus,.review-field textarea:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.11)}
+    .review-submit{grid-column:1/-1;min-height:43px;border-radius:10px;background:var(--gold);color:#17120d;font-size:.76rem;font-weight:800}
+    .review-status{grid-column:1/-1;display:none;padding:10px 12px;border-radius:9px;background:#edf6ec;border:1px solid #d6e8d3;color:#466b44;font-size:.67rem}
+    .review-status.show{display:block}
+    .review-stars-inline{color:#9b6e27}
+
+    .review-user{display:flex;align-items:center;gap:9px}
+    .review-avatar{width:35px;height:35px;border-radius:50%}
+    .review-user strong{font-size:.76rem}
+    .review-user span{display:block;color:#8b8177;font-size:.64rem}
+
+    /* GALLERY */
+    .gallery{display:grid;grid-template-columns:1.2fr .8fr .8fr;grid-template-rows:170px 170px;gap:9px}
+    .gallery-item{overflow:hidden;border-radius:13px;position:relative}
+    .gallery-item.big{grid-row:span 2}
+    .gallery-item img{height:100%;transition:transform 650ms cubic-bezier(.2,.7,.2,1)}
+    .gallery-item::after{
+      content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25));opacity:0;transition:opacity var(--ease)
+    }
+    .gallery-item:hover img{transform:scale(1.08)}
+    .gallery-item:hover::after{opacity:1}
+
+    /* QUOTE + FOOTER */
+    .quote{
+      padding:56px 0;
+      background:#1b1713;
+      color:#fff;
+    }
+    .quote-inner{text-align:center;max-width:760px;margin:auto}
+    .quote-inner blockquote{font:700 clamp(1.9rem,4.5vw,3.3rem)/1.08 "Playfair Display",serif}
+    .quote-inner p{margin-top:8px;color:rgba(255,255,255,.7);font-size:.8rem}
+    .footer{padding:38px 0 24px;background:#181410;color:#fff}
+    .footer-grid{display:grid;grid-template-columns:1.5fr .75fr .85fr .9fr;gap:24px;padding-bottom:25px}
+    .footer .brand-text{color:#fff}
+    .footer .brand-sub{color:#9f978f}
+    .footer-copy{color:#aaa09a;font-size:.75rem;max-width:320px;margin-top:10px}
+    .footer-title{font-size:.8rem;font-weight:800;margin-bottom:9px}
+    .footer-links{display:grid;gap:6px}
+    .footer-links a,.footer-links span{color:#a9a09a;font-size:.73rem}
+    .footer-bottom{padding-top:16px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:#827a73;font-size:.68rem}
+
+    /* MOBILE BOTTOM */
+    .mobile-bottom{
+      display:none;
+      position:fixed;left:12px;right:12px;bottom:12px;z-index:1100;
+      background:rgba(255,255,255,.94);backdrop-filter:blur(16px);
+      border:1px solid var(--line);border-radius:16px;
+      box-shadow:0 18px 45px rgba(31,23,16,.16);
+      grid-template-columns:repeat(5,1fr);padding:6px;
+    }
+    .mobile-bottom a{min-height:45px;border-radius:11px;display:grid;place-items:center;align-content:center;gap:2px;color:#777068;font-size:.62rem}
+    .mobile-bottom a.active{background:#f7eee1;color:#1d1712;font-weight:800}
+    .mobile-bottom .micon{font-size:.95rem}
+
+    /* ANIMATION */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1)}
+    .reveal.visible{opacity:1;transform:none}
+    .delay1{transition-delay:80ms}.delay2{transition-delay:160ms}.delay3{transition-delay:240ms}
+
+    @keyframes heroIn{
+      from{opacity:0;transform:translateY(28px)}
+      to{opacity:1;transform:none}
+    }
+
+    @media(max-width:1100px){
+      .category-row{grid-template-columns:repeat(4,1fr)}
+      .popular-grid{grid-template-columns:repeat(2,1fr)}
+      .why-row{grid-template-columns:repeat(2,1fr)}
+      .why-card:nth-child(2){border-right:0}.why-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
+      .footer-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:860px){
+      .nav-links,.nav-actions{display:none}
+      .mobile-toggle{display:grid;place-items:center}
+      .nav.open .nav-links{
+        position:absolute;left:18px;right:18px;top:70px;
+        display:grid;gap:2px;padding:10px;border-radius:14px;background:rgba(255,255,255,.98);
+        border:1px solid var(--line);box-shadow:var(--shadow)
+      }
+      .nav.open .nav-links a{padding:11px;border-radius:9px}
+      .nav.open .nav-links a:hover{background:#faf6f1}
+      .nav.open .nav-links a::after{display:none}
+      .quick-nav{position:sticky;top:70px}
+      .quick-wrap{justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
+      .quick-wrap::-webkit-scrollbar{display:none}
+      .booking,.about{grid-template-columns:1fr}
+      .booking-media{min-height:360px}
+      .reviews{grid-template-columns:1fr}
+    }
+
+
+    .review-avatar-text{
+      width:35px;height:35px;border-radius:50%;
+      display:grid;place-items:center;
+      background:#f0e5d7;color:#916827;
+      font-size:.76rem;font-weight:800;flex:0 0 auto
+    }
+
+    @media(max-width:620px){
+      .review-form{grid-template-columns:1fr}.review-field.full{grid-column:auto}.review-submit,.review-status{grid-column:auto}
+      .container{width:min(var(--container),calc(100% - 26px))}
+      .hero{min-height:690px}
+      .hero-content{padding:118px 0 94px}
+      .hero-actions .cta{flex:1 1 100%}
+      .hero-dots{right:auto;left:0;bottom:30px}
+      .category-row{
+        display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:5px
+      }
+      .category-row::-webkit-scrollbar{display:none}
+      .category-card{min-width:106px;scroll-snap-align:start}
+      .popular-grid{grid-template-columns:1fr 1fr;gap:10px}
+      .dish-body{padding:11px}
+      .dish-name{font-size:.9rem}
+      .dish-desc{font-size:.67rem;min-height:31px}
+      .dish-btn{font-size:.64rem;padding:0 8px}
+      .section{padding:52px 0}
+      .section-head{align-items:flex-start;flex-direction:column;margin-bottom:22px}
+      .order-strip{padding:24px 20px}
+      .why-row{grid-template-columns:1fr 1fr}
+      .why-card{padding:14px}
+      .about-stats{grid-template-columns:1fr 1fr 1fr}
+      .gallery{grid-template-columns:1fr 1fr;grid-template-rows:145px 145px 145px}
+      .gallery-item.big{grid-row:span 2}
+      .gallery-item:nth-child(4){grid-column:2}
+      .footer{padding-bottom:86px}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .footer-brand{grid-column:1/-1}
+      .mobile-bottom{display:grid}
+    }
+
+    @media(max-width:430px){
+      .popular-grid{grid-template-columns:1fr}
+      .why-row{grid-template-columns:1fr}
+      .why-card{border-right:0!important;border-bottom:1px solid var(--line)}
+      .why-card:last-child{border-bottom:0}
+      .footer-grid{grid-template-columns:1fr}
+      .footer-brand{grid-column:auto}
+      .about-stats{grid-template-columns:1fr 1fr 1fr}
+      .about-stat{padding:10px}
+      .about-stat strong{font-size:1.05rem}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a href="#home" class="brand" aria-label="The Flavour home">
+          <span class="brand-mark">TF</span>
+          <span>
+            <span class="brand-text">The Flavour</span>
+            <span class="brand-sub">Restaurant & Cafe</span>
+          </span>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+          <a href="#home" class="active">Home</a>
+          <a href="menu.html">Menu</a>
+          <a href="#about">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn dark" href="order.html">🛒 Order Online</a>
+          <a class="nav-btn gold" href="booking.html">▣ Book a Table</a>
+        </div>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-slides" aria-hidden="true">
+        <div class="hero-slide active">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=2000&q=90" alt="">
+        </div>
+        <div class="hero-slide">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=2000&q=90" alt="">
+        </div>
+        <div class="hero-slide">
+          <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=2000&q=90" alt="">
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="hero-content">
+          <div class="eyebrow">Restaurant & Cafe</div>
+          <h1>Good Food.<br><span style="color:var(--gold-soft)">Great Moments.</span></h1>
+          <p>Experience delicious food, warm hospitality and unforgettable moments made for sharing.</p>
+          <div class="hero-actions">
+            <a href="menu.html" class="cta gold">Explore Menu →</a>
+            <a href="booking.html" class="cta clear">Book a Table</a>
+          </div>
+          <div class="hero-mini">
+            <span>✦ Fresh ingredients</span>
+            <span>✦ 4.8+ guest rating</span>
+            <span>✦ Open today</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container hero-dots">
+        <div id="heroDots" style="display:flex;gap:7px"></div>
+        <button class="hero-arrow" id="heroPrev" aria-label="Previous image">←</button>
+        <button class="hero-arrow" id="heroNext" aria-label="Next image">→</button>
+      </div>
+    </section>
+
+    <!-- QUICK NAV -->
+    <div class="quick-nav">
+      <div class="container quick-wrap">
+        <a href="#home">⌂ Home</a>
+        <a href="menu.html">◫ Menu</a>
+        <a href="#about">♙ About</a>
+        <a href="contact.html">⌂ Contact</a>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Explore our menu</div>
+            <h2>Discover our menu.</h2>
+          </div>
+          <a href="menu.html" class="view-all">View All →</a>
+        </div>
+
+        <div class="category-row" id="categoryRow"></div>
+      </div>
+    </section>
+
+    <!-- POPULAR DISHES -->
+    <section class="section alt" id="popular">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Most loved dishes</div>
+            <h2>Popular dishes.</h2>
+          </div>
+          <a href="menu.html" class="view-all">View All →</a>
+        </div>
+
+          <div class="popular-grid" id="popularGrid"></div>
+      </div>
+    </section>
+
+    <!-- ORDER CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="order-strip reveal">
+          <div>
+            <div class="section-title-kicker" style="color:#efc77d">Order online</div>
+            <h2>Craving something delicious?</h2>
+            <p>Order your favourites directly from our kitchen with a simple, mobile-friendly ordering flow.</p>
+            <a href="order.html" class="cta gold">Order Now →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="section alt" id="why">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Why choose us</div>
+            <h2>Made with care.</h2>
+          </div>
+          <p>Simple things that make the restaurant experience better.</p>
+        </div>
+
+        <div class="why-row">
+          <article class="why-card reveal"><div class="why-icon">✦</div><h3>Fresh Ingredients</h3><p>We choose fresh, quality ingredients every day.</p></article>
+          <article class="why-card reveal delay1"><div class="why-icon">♨</div><h3>Experienced Chefs</h3><p>Thoughtfully prepared dishes with balanced flavour.</p></article>
+          <article class="why-card reveal delay2"><div class="why-icon">⚡</div><h3>Fast Service</h3><p>Quick and friendly service from order to table.</p></article>
+          <article class="why-card reveal delay3"><div class="why-icon">⌂</div><h3>Cozy Ambience</h3><p>A comfortable setting for every kind of gathering.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOK TABLE -->
+    <section class="section" id="booking-preview">
+      <div class="container">
+        <div class="booking">
+          <div class="booking-media reveal">
+            <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=88" alt="Restaurant dining area">
+            <div class="booking-caption">
+              <div class="section-title-kicker" style="color:#efc77d">Reserve your table</div>
+              <h3>Good food. Better company.</h3>
+              <p>Book a table for a relaxed and memorable dining experience.</p>
+            </div>
+          </div>
+
+          <div class="booking-form reveal delay1">
+            <h2>Reserve your table.</h2>
+            <p>Choose your date, time and number of guests.</p>
+
+            <form id="bookingForm" class="form-grid">
+              <div class="field"><label for="bName">Name</label><input id="bName" required placeholder="Your name"></div>
+              <div class="field"><label for="bPhone">Phone</label><input id="bPhone" required inputmode="numeric" placeholder="9876543210"></div>
+              <div class="field"><label for="bDate">Date</label><input id="bDate" type="date" required></div>
+              <div class="field"><label for="bTime">Time</label><select id="bTime" required><option value="" disabled selected>Select time</option><option>11:30 AM</option><option>1:00 PM</option><option>6:30 PM</option><option>7:30 PM</option><option>8:30 PM</option><option>9:30 PM</option></select></div>
+              <div class="field"><label for="bGuests">Guests</label><select id="bGuests" required><option value="" disabled selected>Select guests</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div>
+              <div class="field"><label for="bOccasion">Occasion</label><select id="bOccasion"><option>No special occasion</option><option>Birthday</option><option>Anniversary</option><option>Family Dinner</option><option>Business Dinner</option></select></div>
+              <div class="field full"><label for="bRequest">Special Request</label><textarea id="bRequest" placeholder="Any special request?"></textarea></div>
+              <div class="field full"><button class="booking-submit" type="submit">Book My Table →</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section alt" id="about">
+      <div class="container about">
+        <div class="about-image reveal">
+          <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1300&q=88" alt="Restaurant chef and dish">
+        </div>
+        <div class="about-copy reveal delay1">
+          <div class="section-title-kicker">Our story</div>
+          <h2>More than just a restaurant.</h2>
+          <p>We started with a simple belief — great food should bring people together. Every dish is prepared with care, fresh ingredients and a passion for memorable dining.</p>
+          <p>From everyday lunches to special evenings, we want every visit to feel warm, comfortable and worth remembering.</p>
+
+          <div class="about-stats">
+            <div class="about-stat"><strong>10+</strong><span>Years Experience</span></div>
+            <div class="about-stat"><strong>50+</strong><span>Signature Dishes</span></div>
+            <div class="about-stat"><strong>10K+</strong><span>Happy Customers</span></div>
+          </div>
+
+          <div style="margin-top:17px"><a href="about.html" class="cta gold">Learn More →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Guest stories</div>
+            <h2>What our customers say.</h2>
+          </div>
+        </div>
+
+        <div class="review-actions reveal">
+          <button class="review-btn" id="openReview">＋ Add Your Review</button>
+        </div>
+
+        <div class="review-form-wrap" id="reviewFormWrap">
+          <form class="review-form" id="reviewForm">
+            <div class="review-field">
+              <label for="reviewName">Your Name</label>
+              <input id="reviewName" name="name" required placeholder="Enter your name">
+            </div>
+            <div class="review-field">
+              <label for="reviewRating">Rating</label>
+              <select id="reviewRating" name="rating" required>
+                <option value="" selected disabled>Choose stars</option>
+                <option value="5">★★★★★ 5 - Excellent</option>
+                <option value="4">★★★★☆ 4 - Very Good</option>
+                <option value="3">★★★☆☆ 3 - Good</option>
+                <option value="2">★★☆☆☆ 2 - Okay</option>
+                <option value="1">★☆☆☆☆ 1 - Poor</option>
+              </select>
+            </div>
+            <div class="review-field full">
+              <label for="reviewText">Your Review</label>
+              <textarea id="reviewText" name="review" required placeholder="Tell us about your experience..."></textarea>
+            </div>
+            <button class="review-submit" type="submit">Submit Review →</button>
+            <div class="review-status" id="reviewStatus"></div>
+          </form>
+        </div>
+
+        <div class="reviews" id="reviews">
+          <article class="review reveal">
+            <div class="review-stars">★★★★★</div>
+            <p>“Amazing food and great ambience! The biryani was a must-try.”</p>
+            <div class="review-user"><img class="review-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Rahul"><div><strong>Rahul Kumar</strong><span>Weekend guest</span></div></div>
+          </article>
+          <article class="review reveal delay1">
+            <div class="review-stars">★★★★★</div>
+            <p>“Loved the pasta and the service was top-notch. Will definitely visit again!”</p>
+            <div class="review-user"><img class="review-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80" alt="Sneha"><div><strong>Sneha Iyer</strong><span>Regular guest</span></div></div>
+          </article>
+          <article class="review reveal delay2">
+            <div class="review-stars">★★★★★</div>
+            <p>“One of the best restaurants in town. Highly recommended for family dinners.”</p>
+            <div class="review-user"><img class="review-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="Vikram"><div><strong>Vikram Singh</strong><span>Family dinner</span></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section alt" id="gallery">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Our gallery</div>
+            <h2>A glimpse of the experience.</h2>
+          </div>
+          <a href="#gallery" class="view-all">View Gallery →</a>
+        </div>
+
+        <div class="gallery">
+          <a class="gallery-item big reveal" href="#gallery"><img src="https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=1300&q=88" alt="Restaurant interior"></a>
+          <a class="gallery-item reveal delay1" href="#gallery"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=88" alt="Pizza"></a>
+          <a class="gallery-item reveal delay2" href="#gallery"><img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=900&q=88" alt="Biryani"></a>
+          <a class="gallery-item reveal delay1" href="#gallery"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=88" alt="Dining area"></a>
+          <a class="gallery-item reveal delay2" href="#gallery"><img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=88" alt="Grilled chicken"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote">
+      <div class="container">
+        <div class="quote-inner reveal">
+          <blockquote>“Good food brings people together.”</blockquote>
+          <p>A simple philosophy behind every plate and every table.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-title-kicker">Get in touch</div>
+            <h2>Visit us.</h2>
+          </div>
+          <a href="contact.html" class="view-all">Contact Us →</a>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:14px">
+          <div style="border:1px solid var(--line);border-radius:16px;padding:22px;background:#fff" class="reveal">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px">
+              <div><div class="section-title-kicker">Address</div><p style="font-size:.8rem;color:#6e655d">123 Food Street, Chennai, Tamil Nadu</p></div>
+              <div><div class="section-title-kicker">Opening Hours</div><p style="font-size:.8rem;color:#6e655d">Mon–Thu 11 AM–10 PM<br>Fri–Sun 11 AM–11 PM</p></div>
+              <div><div class="section-title-kicker">Phone</div><a href="tel:+919876543210" style="font-size:.8rem;font-weight:700">+91 98765 43210</a></div>
+              <div><div class="section-title-kicker">Instagram</div><a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" style="font-size:.8rem;font-weight:700">@theflavour.restaurant</a></div>
+            </div>
+            <div style="margin-top:16px"><a href="https://maps.google.com/" target="_blank" rel="noopener noreferrer" class="cta gold">Get Directions →</a></div>
+          </div>
+
+          <a href="https://maps.google.com/" target="_blank" rel="noopener noreferrer" style="min-height:220px;border-radius:16px;overflow:hidden;position:relative;display:block" class="reveal delay1">
+            <img style="height:100%" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=88" alt="Restaurant location">
+            <div style="position:absolute;left:15px;right:15px;bottom:15px;padding:14px;border-radius:12px;background:rgba(20,15,11,.7);color:#fff;backdrop-filter:blur(12px);font-size:.78rem;font-weight:700">Open location in Google Maps →</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#home" class="brand">
+            <span class="brand-mark" style="background:#fff;color:#17120e">TF</span>
+            <span><span class="brand-text">The Flavour</span><span class="brand-sub">Restaurant & Cafe</span></span>
+          </a>
+          <p class="footer-copy">Good food, warm hospitality and unforgettable moments — all around one table.</p>
+        </div>
+        <div>
+          <div class="footer-title">Quick Links</div>
+          <div class="footer-links">
+            <a href="#home">Home</a><a href="menu.html">Menu</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-title">Order & Booking</div>
+          <div class="footer-links">
+            <a href="order.html">Order Online</a><a href="booking.html">Book a Table</a><a href="#popular">Popular Dishes</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-title">Contact</div>
+          <div class="footer-links">
+            <a href="tel:+919876543210">+91 98765 43210</a>
+            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">@theflavour.restaurant</a>
+            <span>Chennai, Tamil Nadu</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 The Flavour Restaurant & Cafe. All rights reserved.</span>
+        <span>Crafted for a clean, modern dining experience.</span>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="mobile-bottom" aria-label="Mobile navigation">
+    <a href="#home" class="active"><span class="micon">⌂</span><span>Home</span></a>
+    <a href="menu.html"><span class="micon">◫</span><span>Menu</span></a>
+    <a href="order.html"><span class="micon">🛒</span><span>Order</span></a>
+    <a href="booking.html"><span class="micon">▣</span><span>Booking</span></a>
+    <a href="contact.html"><span class="micon">☎</span><span>Contact</span></a>
+  </nav>
+
+  <div id="toast" style="position:fixed;left:50%;bottom:22px;z-index:1200;transform:translate(-50%,90px);opacity:0;background:#201812;color:#fff;border-radius:999px;padding:11px 16px;border:1px solid rgba(255,255,255,.12);box-shadow:0 15px 35px rgba(0,0,0,.18);transition:transform .3s,opacity .3s;font-size:.78rem">Added to cart</div>
+
+  <script>
+    // Header
+    const topbar = document.getElementById("topbar");
+    const nav = document.getElementById("nav");
+    const mobileToggle = document.getElementById("mobileToggle");
+
+    window.addEventListener("scroll", () => {
+      topbar.classList.toggle("scrolled", window.scrollY > 20);
+    });
+
+    mobileToggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      mobileToggle.textContent = open ? "✕" : "☰";
+      mobileToggle.setAttribute("aria-expanded", String(open));
+    });
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        mobileToggle.textContent = "☰";
+        mobileToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // Hero slider
+    const slides = [...document.querySelectorAll(".hero-slide")];
+    const dotsWrap = document.getElementById("heroDots");
+    const prev = document.getElementById("heroPrev");
+    const next = document.getElementById("heroNext");
+    let slideIndex = 0;
+    let slideTimer;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.className = "dot";
+      dot.setAttribute("aria-label", `Slide ${i+1}`);
+      dot.addEventListener("click", () => showSlide(i));
+      dotsWrap.appendChild(dot);
+    });
+
+    function showSlide(index){
+      slideIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === slideIndex));
+      [...dotsWrap.children].forEach((dot, i) => dot.classList.toggle("active", i === slideIndex));
+      clearInterval(slideTimer);
+      slideTimer = setInterval(() => showSlide(slideIndex + 1), 5200);
+    }
+
+    prev.addEventListener("click", () => showSlide(slideIndex - 1));
+    next.addEventListener("click", () => showSlide(slideIndex + 1));
+
+    let touchStart = 0;
+    document.querySelector(".hero").addEventListener("touchstart", e => {
+      touchStart = e.changedTouches[0].clientX;
+    }, {passive:true});
+
+    document.querySelector(".hero").addEventListener("touchend", e => {
+      const diff = e.changedTouches[0].clientX - touchStart;
+      if (Math.abs(diff) > 45) showSlide(diff < 0 ? slideIndex + 1 : slideIndex - 1);
+    }, {passive:true});
+
+    showSlide(0);
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.12});
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // Favourite buttons
+    document.querySelectorAll(".dish-heart").forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.textContent = btn.textContent === "♡" ? "♥" : "♡";
+        btn.style.color = btn.textContent === "♥" ? "#b77922" : "#6c625b";
+      });
+    });
+
+    // ---------------- LIVE MENU FROM DATABASE ----------------
+    const categoryRow = document.getElementById("categoryRow");
+    const popularGrid = document.getElementById("popularGrid");
+
+    function escapeHtml(value){
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[ch]));
+    }
+
+    function money(value){
+      return `₹${Math.round(Number(value || 0)).toLocaleString("en-IN")}`;
+    }
+
+    const fallbackCategoryImages = {
+      "Starters":"https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=85",
+      "Main Course":"https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=700&q=85",
+      "Biryani":"https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=700&q=85",
+      "Pizza":"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=700&q=85",
+      "Burgers":"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=700&q=85",
+      "Pasta":"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=700&q=85",
+      "Desserts":"https://images.unsplash.com/photo-1564355808539-22fda35bed7e?auto=format&fit=crop&w=700&q=85",
+      "Beverages":"https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=700&q=85"
+    };
+
+    function canonicalCategory(value){
+      const raw=String(value || "").trim();
+      const lower=raw.toLowerCase();
+      if(lower.includes("starter")) return "Starters";
+      if(lower.includes("main")) return "Main Course";
+      if(lower.includes("biryani")) return "Biryani";
+      if(lower.includes("pizza")) return "Pizza";
+      if(lower.includes("burger")) return "Burgers";
+      if(lower.includes("pasta")) return "Pasta";
+      if(lower.includes("dessert")) return "Desserts";
+      if(lower.includes("beverage") || lower.includes("drink")) return "Beverages";
+      return raw || "Other";
+    }
+
+    function categoryKey(name){
+      return String(name).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+    }
+
+    function showLiveToast(message){
+      toast.textContent=message;
+      toast.style.opacity="1";
+      toast.style.transform="translate(-50%,0)";
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>{
+        toast.style.opacity="0";
+        toast.style.transform="translate(-50%,90px)";
+      },1800);
+    }
+
+    function buildCategoryCard(category, item, index){
+      const card=document.createElement("a");
+      card.className=`category-card reveal ${index%4===1?"delay1":index%4===2?"delay2":index%4===3?"delay3":""}`;
+      card.href=`menu.html?category=${encodeURIComponent(category)}`;
+      const image=item?.image_url || fallbackCategoryImages[category] || fallbackCategoryImages["Main Course"];
+      card.innerHTML=`<img src="${escapeHtml(image)}" alt="${escapeHtml(category)}"><div class="category-name">${escapeHtml(category)}</div>`;
+      return card;
+    }
+
+    function buildPopularCard(item, index){
+      const card=document.createElement("article");
+      card.className=`dish reveal ${index%4===1?"delay1":index%4===2?"delay2":index%4===3?"delay3":""}`;
+      const image=item.image_url || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=85";
+      card.innerHTML=`
+        <div class="dish-img">
+          <button class="dish-heart" type="button" aria-label="Favourite ${escapeHtml(item.name)}">♡</button>
+          <img src="${escapeHtml(image)}" alt="${escapeHtml(item.name)}" loading="lazy">
+        </div>
+        <div class="dish-body">
+          <div class="dish-name">${escapeHtml(item.name)}</div>
+          <div class="dish-desc">${escapeHtml(item.description || "Freshly prepared from our kitchen.")}</div>
+          <div class="dish-meta"><span class="dish-rating">★★★★★</span><span class="dish-price">${money(item.price)}</span></div>
+          <div class="dish-actions">
+            <button class="dish-btn add add-cart" type="button" data-name="${escapeHtml(item.name)}">Add to Cart</button>
+            <a href="order.html" class="dish-btn more">View</a>
+          </div>
+        </div>`;
+
+      const heart=card.querySelector(".dish-heart");
+      heart.addEventListener("click",()=>{
+        heart.textContent=heart.textContent==="♡"?"♥":"♡";
+        heart.style.color=heart.textContent==="♥"?"#b77922":"#6c625b";
+      });
+      card.querySelector(".add-cart").addEventListener("click",()=>showLiveToast(`${item.name} added to cart`));
+      return card;
+    }
+
+    async function loadHomepageMenu(){
+      categoryRow.innerHTML='<div class="category-loading">Loading menu categories…</div>';
+      popularGrid.innerHTML='<div class="popular-empty">Loading popular dishes…</div>';
+
+      try{
+        const response=await fetch("/api/menu",{headers:{"Accept":"application/json"}});
+        const data=await response.json();
+        if(!response.ok) throw new Error(data.error || "Could not load menu");
+
+        const available=Array.isArray(data) ? data.filter(item=>Number(item.available)!==0) : [];
+
+        // Categories: show the standard eight categories only when the owner has items in them.
+        const standard=["Starters","Main Course","Biryani","Pizza","Burgers","Pasta","Desserts","Beverages"];
+        const categoryItems=new Map();
+
+        available.forEach(item=>{
+          const category=canonicalCategory(item.category);
+          if(!categoryItems.has(category)) categoryItems.set(category,item);
+        });
+
+        const categories=standard.filter(c=>categoryItems.has(c));
+        // Add any custom categories after the standard ones.
+        [...categoryItems.keys()].forEach(c=>{
+          if(!standard.includes(c)) categories.push(c);
+        });
+
+        categoryRow.innerHTML="";
+        if(!categories.length){
+          categoryRow.innerHTML='<div class="category-loading">No menu categories available yet.</div>';
+        }else{
+          categories.slice(0,8).forEach((category,index)=>{
+            const card=buildCategoryCard(category,categoryItems.get(category),index);
+            categoryRow.appendChild(card);
+            observer.observe(card);
+          });
+        }
+
+        // Popular dishes are controlled by the admin "Popular" toggle.
+        const popular=available.filter(item=>Number(item.popular)===1).slice(0,4);
+        popularGrid.innerHTML="";
+        if(!popular.length){
+          popularGrid.innerHTML='<div class="popular-empty">No popular dishes selected yet. Mark dishes as Popular from Menu Management.</div>';
+        }else{
+          popular.forEach((item,index)=>{
+            const card=buildPopularCard(item,index);
+            popularGrid.appendChild(card);
+            observer.observe(card);
+          });
+        }
+      }catch(error){
+        console.error(error);
+        categoryRow.innerHTML=`<div class="category-loading">Could not load live menu categories.<br><small>${escapeHtml(error.message)}</small></div>`;
+        popularGrid.innerHTML=`<div class="popular-empty">Could not load live popular dishes.<br><small>${escapeHtml(error.message)}</small></div>`;
+      }
+    }
+
+    loadHomepageMenu();
+
+    // Demo cart
+    const toast = document.getElementById("toast");
+    let toastTimer;
+    document.querySelectorAll(".add-cart").forEach(btn => {
+      btn.addEventListener("click", () => {
+        toast.textContent = `${btn.dataset.name} added to cart`;
+        toast.style.opacity = "1";
+        toast.style.transform = "translate(-50%,0)";
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.transform = "translate(-50%,90px)";
+        }, 1800);
+      });
+    });
+
+    // ---------------- HOMEPAGE BOOKING ----------------
+    const bookingForm = document.getElementById("bookingForm");
+    if(bookingForm){
+      const dateInput = document.getElementById("bDate");
+      const now = new Date();
+      dateInput.min = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+
+      bookingForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        if(!bookingForm.checkValidity()){
+          bookingForm.reportValidity();
+          return;
+        }
+
+        try{
+          const response=await fetch("/api/bookings",{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Accept":"application/json"},
+            body:JSON.stringify({
+              name:document.getElementById("bName").value.trim(),
+              phone:document.getElementById("bPhone").value.trim(),
+              date:document.getElementById("bDate").value,
+              time:document.getElementById("bTime").value,
+              guests:document.getElementById("bGuests").value,
+              occasion:document.getElementById("bOccasion").value,
+              request:document.getElementById("bRequest").value.trim()
+            })
+          });
+          const result=await response.json();
+          if(!response.ok || result.success===false){
+            throw new Error(result.error || result.message || "Could not save booking.");
+          }
+          showLiveToast("Booking saved successfully ✓");
+          bookingForm.reset();
+          dateInput.min = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+        }catch(error){
+          console.error("Booking error:",error);
+          showLiveToast(error.message || "Booking failed");
+        }
+      });
+    }
+
+    // ---------------- REVIEWS ----------------
+    const reviewFormWrap = document.getElementById("reviewFormWrap");
+    const openReview = document.getElementById("openReview");
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewStatus = document.getElementById("reviewStatus");
+    const reviewList = document.getElementById("reviews");
+
+    openReview.addEventListener("click", () => {
+      reviewFormWrap.classList.toggle("show");
+      if (reviewFormWrap.classList.contains("show")) {
+        document.getElementById("reviewName").focus();
+        reviewFormWrap.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    });
+
+    function starText(rating){
+      const n = Number(rating);
+      return "★★★★★".slice(0,n) + "☆☆☆☆☆".slice(0,5-n);
+    }
+
+    function addReviewCard(review, prepend = true){
+      const article = document.createElement("article");
+      article.className = "review";
+      article.innerHTML = `
+        <div class="review-stars review-stars-inline">${starText(review.rating)}</div>
+        <p>“${String(review.review_text).replace(/[<>&"]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[s]))}”</p>
+        <div class="review-user">
+          <div class="review-avatar-text">${String(review.customer_name).trim().slice(0,1).toUpperCase()}</div>
+          <div><strong>${String(review.customer_name).replace(/[<>&"]/g, s => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[s]))}</strong><span>Verified guest</span></div>
+        </div>
+      `;
+      if (prepend) reviewList.prepend(article);
+      else reviewList.appendChild(article);
+    }
+
+    async function loadReviews(){
+      try{
+        const response = await fetch("/api/reviews");
+        if(!response.ok) return;
+        const reviews = await response.json();
+        reviews.slice(0,8).reverse().forEach(review => addReviewCard(review, false));
+      }catch(error){
+        // Keep the existing sample reviews when the backend is unavailable.
+      }
+    }
+
+    reviewForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if(!reviewForm.checkValidity()){
+        reviewForm.reportValidity();
+        return;
+      }
+
+      const payload = {
+        name: document.getElementById("reviewName").value.trim(),
+        rating: Number(document.getElementById("reviewRating").value),
+        review: document.getElementById("reviewText").value.trim()
+      };
+
+      reviewStatus.textContent = "Saving your review...";
+      reviewStatus.classList.add("show");
+
+      try{
+        const response = await fetch("/api/reviews", {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+          throw new Error(data.error || "Could not save the review.");
+        }
+
+        addReviewCard({
+          customer_name: payload.name,
+          rating: payload.rating,
+          review_text: payload.review
+        }, true);
+
+        reviewStatus.textContent = "Review added successfully ✓";
+        reviewForm.reset();
+
+        setTimeout(() => {
+          reviewFormWrap.classList.remove("show");
+          reviewStatus.classList.remove("show");
+          reviewStatus.textContent = "";
+        }, 1300);
+
+        document.getElementById("reviews").scrollIntoView({behavior:"smooth", block:"center"});
+      }catch(error){
+        reviewStatus.textContent = "Could not save the review. Make sure Flask is running and try again.";
+      }
+    });
+
+    loadReviews();
+
+</script>
+</body>
+</html>

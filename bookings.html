@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Flavour restaurant admin bookings.">
+  <title>The Flavour | Bookings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#171411;--soft:#6c635b;--paper:#fff;--bg:#f4f0ea;--gold:#d7a44f;
+      --line:#e8e0d7;--green:#3f6d43;--red:#9b4a41;--shadow:0 15px 40px rgba(25,20,14,.08)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+    button,input{font:inherit}button{border:0;cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+    .sidebar{background:#1a1511;color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh}
+    .brand{display:flex;align-items:center;gap:10px;padding:8px 10px 24px}
+    .brand-mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-weight:800}
+    .brand-text{font:700 1.1rem "Playfair Display",serif}.brand-sub{display:block;color:#9f978f;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase}
+    .nav{display:grid;gap:5px}.sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:8px 10px;}.website-label{margin-top:10px}
+    .nav a{text-decoration:none;padding:11px 12px;border-radius:11px;color:#bcb4ae;font-size:.79rem;font-weight:700}
+    .nav a:hover,.nav a.active{background:#2a221c;color:#fff}.nav a.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .logout{margin-top:25px;padding:11px 12px;border-radius:11px;background:#241e19;color:#c9c1bb;font-size:.76rem;font-weight:800;text-align:center}
+    .main{padding:25px;min-width:0}
+    .top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:24px}
+    .eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:800}
+    h1{font:700 clamp(2rem,4vw,3.2rem)/1 "Playfair Display",serif;margin-top:4px}
+    .intro{color:var(--soft);font-size:.8rem;margin-top:6px}
+    .top-right{display:flex;align-items:center;gap:8px}.live{padding:9px 11px;border-radius:10px;background:#eff7ef;color:var(--green);border:1px solid #d6e8d3;font-size:.68rem;font-weight:800}
+    .refresh{padding:10px 13px;border-radius:10px;background:var(--ink);color:#fff;font-size:.71rem;font-weight:800}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 7px 22px rgba(25,20,14,.04)}
+    .label{font-size:.67rem;color:var(--soft);font-weight:700}.value{font:700 2rem/1.05 "Playfair Display",serif;margin-top:7px}.note{font-size:.61rem;color:#9a918a;margin-top:6px}
+    .toolbar{background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+    .filters{display:flex;gap:7px;overflow:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
+    .filter{flex:0 0 auto;min-height:37px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:#faf7f2;color:#635a52;font-size:.69rem;font-weight:800}
+    .filter.active{background:var(--gold);border-color:var(--gold);color:#17120d}
+    .search{min-width:250px;height:39px;border:1px solid var(--line);border-radius:10px;padding:0 11px;outline:none}.search:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.1)}
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 7px 22px rgba(25,20,14,.04)}
+    .card-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .card-head h2{font:700 1.55rem/1 "Playfair Display",serif}.count{font-size:.66rem;color:var(--soft)}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:860px}
+    th,td{padding:12px 13px;border-bottom:1px solid #eee7df;text-align:left;font-size:.67rem;vertical-align:middle}
+    th{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#8b8178;background:#fcfaf7}
+    tbody tr:hover{background:#fffcf8}
+    .customer strong{display:block;font-size:.7rem}.customer span{font-size:.59rem;color:#8a8078}
+    .guests{font-weight:800}.date,.time{white-space:nowrap;color:#6e655d}
+    .pill{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:.58rem;font-weight:800;text-transform:capitalize}
+    .pending{background:#fff4da;color:#8e661e}.confirmed{background:#edf7ef;color:#3f6d43}.seated{background:#eaf5fb;color:#2f6a80}
+    .completed{background:#eeeafa;color:#5c4d89}.cancelled{background:#fff0ee;color:#9b4a41}
+    .actions{display:flex;gap:5px;align-items:center}.view{padding:7px 10px;border-radius:8px;background:var(--ink);color:#fff;font-size:.59rem;font-weight:800}
+    .select-status{padding:7px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:.58rem}
+    .empty{padding:35px;text-align:center;color:#847a72;font-size:.72rem}
+    .toast{position:fixed;left:50%;bottom:22px;z-index:2000;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;border-radius:999px;padding:10px 15px;font-size:.72rem;transition:.25s}.toast.show{transform:translate(-50%,0);opacity:1}
+    .modal{position:fixed;inset:0;z-index:1500;display:none;align-items:center;justify-content:center;background:rgba(18,14,10,.55);backdrop-filter:blur(8px);padding:18px}
+    .modal.show{display:flex}.modal-card{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:0 25px 70px rgba(0,0,0,.22)}
+    .modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.modal-head h3{font:700 1.8rem "Playfair Display",serif}.close{width:36px;height:36px;border-radius:9px;background:var(--bg)}
+    .details{display:grid;gap:10px;margin-top:16px}.detail{padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#fcfaf7}.detail b{display:block;font-size:.62rem;text-transform:uppercase;color:#8b8178;letter-spacing:.08em;margin-bottom:3px}.detail span{font-size:.75rem}
+    @media(max-width:1100px){.stats{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:800px){
+      .app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:10px 12px}.brand{padding:5px 6px 10px}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap}.logout{display:none}
+      .main{padding:16px}.top{flex-direction:column;align-items:flex-start}.top-right{width:100%;justify-content:space-between}
+      .toolbar{align-items:stretch;flex-direction:column}.search{min-width:0;width:100%}
+    }
+    @media(max-width:480px){.stats{grid-template-columns:1fr}.main{padding:12px}}
+  
+    /* ===== COMMON ADMIN SIDEBAR ===== */
+    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+    .sidebar{
+      position:fixed;inset:0 auto 0 0;width:250px;height:100vh;
+      background:#1a1511;color:#fff;padding:20px 14px;display:flex;flex-direction:column;
+      z-index:100;overflow-y:auto
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.09)}
+    .brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-size:.8rem;font-weight:800}
+    .brand-name,.brand-text{font:700 1.12rem/1 "Playfair Display",serif;color:#fff;white-space:nowrap}
+    .brand-sub{display:block;margin-top:3px;color:#9f978f;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+    .sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:18px 10px 8px}
+    .website-label{margin-top:4px}
+    .nav{display:grid;gap:5px}
+    .nav a,.side-link{
+      min-height:43px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:10px;
+      color:#bcb4ae;font-size:.76rem;font-weight:700;text-decoration:none!important;
+      transition:background .2s,color .2s
+    }
+    .nav a:hover,.nav a.active,.side-link:hover,.side-link.active{background:#2a221c;color:#fff}
+    .nav a.active,.side-link.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .side-icon{width:23px;flex:0 0 23px;text-align:center}
+    .logout{width:100%;min-height:43px;margin-top:auto;border-radius:10px;background:rgba(255,255,255,.05);color:#c9c1bb;font-size:.74rem;font-weight:800;text-align:center}
+    .sidebar-bottom{margin-top:auto}
+    .main{grid-column:2;min-width:0}
+    @media(max-width:800px){
+      .app{display:block}
+      .sidebar{position:static;width:100%;height:auto;padding:10px 12px;overflow:visible}
+      .brand{min-height:58px;padding:5px 6px 10px}
+      .sidebar-label{padding:12px 6px 6px}
+      .nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav a,.side-link{flex:0 0 auto;min-height:40px;padding:0 11px;white-space:nowrap}
+      .sidebar-bottom{margin-top:8px}
+      .logout{display:block}
+      .main{grid-column:auto}
+    }
+
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+  <div class="brand"><div class="brand-mark">TF</div><div><div class="brand-name">The Flavour</div><span class="brand-sub">Owner Admin</span></div></div>
+  <div class="sidebar-label">Overview</div>
+  <nav class="nav">
+    <a href="admin_dashboard.html"><span class="side-icon">⌂</span>Dashboard</a>
+    <a href="menu_management.html"><span class="side-icon">◫</span>Menu Management</a>
+    <a href="orders.html"><span class="side-icon">🛒</span>Orders</a>
+    <a href="bookings.html" class="active"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html"><span class="side-icon">♟</span>Customers</a>
+  </nav>
+  <div class="sidebar-label website-label">Website</div>
+  <nav class="nav"><a href="index.html"><span class="side-icon">↗</span>View Website</a></nav>
+  <div class="sidebar-bottom"><button class="logout" id="logout">↪ Logout</button></div>
+</aside>
+
+  <main class="main">
+    <section class="top">
+      <div>
+        <div class="eyebrow">Table reservations</div>
+        <h1>Bookings</h1>
+        <div class="intro">Track and update real customer table reservations from your database.</div>
+      </div>
+      <div class="top-right">
+        <div class="live" id="backendStatus">Checking backend…</div>
+        <button class="refresh" id="refreshBtn">↻ Refresh</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><div class="label">Today</div><div class="value" id="todayCount">0</div><div class="note">Today's reservations</div></div>
+      <div class="stat"><div class="label">Pending</div><div class="value" id="pendingCount">0</div><div class="note">Need confirmation</div></div>
+      <div class="stat"><div class="label">Confirmed</div><div class="value" id="confirmedCount">0</div><div class="note">Confirmed reservations</div></div>
+      <div class="stat"><div class="label">Guests Today</div><div class="value" id="guestCount">0</div><div class="note">Total guests booked today</div></div>
+    </section>
+
+    <section class="toolbar">
+      <div class="filters" id="filters">
+        <button class="filter active" data-status="all">All Bookings</button>
+        <button class="filter" data-status="pending">Pending</button>
+        <button class="filter" data-status="confirmed">Confirmed</button>
+        <button class="filter" data-status="seated">Seated</button>
+        <button class="filter" data-status="completed">Completed</button>
+        <button class="filter" data-status="cancelled">Cancelled</button>
+      </div>
+      <input class="search" id="search" type="search" placeholder="Search customer or phone...">
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Recent Bookings</h2>
+        <span class="count" id="showingCount">Showing 0 bookings</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Customer</th><th>Date</th><th>Time</th><th>Guests</th><th>Occasion</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="bookingsBody">
+            <tr><td colspan="7"><div class="empty">Loading bookings…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><div class="eyebrow">Booking details</div><h3 id="modalTitle">Booking</h3></div>
+      <button class="close" id="closeModal" type="button">✕</button>
+    </div>
+    <div class="details" id="modalDetails"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const body=document.getElementById("bookingsBody");
+  const search=document.getElementById("search");
+  const filters=[...document.querySelectorAll(".filter")];
+  const statusEl=document.getElementById("backendStatus");
+  const toast=document.getElementById("toast");
+  const modal=document.getElementById("modal");
+  const modalTitle=document.getElementById("modalTitle");
+  const modalDetails=document.getElementById("modalDetails");
+  let bookings=[];
+  let activeStatus="all";
+  let toastTimer;
+
+  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+  function today(){
+    const d=new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function showToast(msg){
+    toast.textContent=msg;toast.classList.add("show");
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
+  }
+  function filtered(){
+    const q=search.value.trim().toLowerCase();
+    return bookings.filter(b=>{
+      const matchStatus=activeStatus==="all"||b.status===activeStatus;
+      const hay=`${b.id} ${b.customer_name||""} ${b.phone||""} ${b.booking_date||""}`.toLowerCase();
+      return matchStatus && (!q||hay.includes(q));
+    });
+  }
+  function renderStats(){
+    const t=today();
+    const todayBookings=bookings.filter(b=>b.booking_date===t && b.status!=="cancelled");
+    document.getElementById("todayCount").textContent=todayBookings.length;
+    document.getElementById("pendingCount").textContent=bookings.filter(b=>b.status==="pending").length;
+    document.getElementById("confirmedCount").textContent=bookings.filter(b=>b.status==="confirmed").length;
+    document.getElementById("guestCount").textContent=todayBookings.reduce((n,b)=>n+Number(b.guests||0),0);
+  }
+  function render(){
+    renderStats();
+    const list=filtered();
+    document.getElementById("showingCount").textContent=`Showing ${list.length} booking${list.length===1?"":"s"}`;
+    if(!list.length){
+      body.innerHTML='<tr><td colspan="7"><div class="empty">No matching bookings found.</div></td></tr>';
+      return;
+    }
+    body.innerHTML=list.slice(0,100).map(b=>`
+      <tr>
+        <td><div class="customer"><strong>${esc(b.customer_name)}</strong><span>${esc(b.phone)}</span></div></td>
+        <td class="date">${esc(b.booking_date)}</td>
+        <td class="time">${esc(b.booking_time)}</td>
+        <td class="guests">${esc(b.guests)}</td>
+        <td>${esc(b.occasion||"—")}</td>
+        <td><span class="pill ${esc(b.status||"pending")}">${esc(b.status||"pending")}</span></td>
+        <td>
+          <div class="actions">
+            <button class="view" type="button" onclick="viewBooking(${b.id})">View</button>
+            <select class="select-status" onchange="changeStatus(${b.id},this.value)" aria-label="Change booking status">
+              ${["pending","confirmed","seated","completed","cancelled"].map(s=>`<option value="${s}" ${b.status===s?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  async function loadBookings(){
+    try{
+      const response=await fetch("/api/bookings",{headers:{"Accept":"application/json"}});
+      const data=await response.json();
+      if(!response.ok) throw new Error(data.error||"Could not load bookings.");
+      bookings=Array.isArray(data)?data:[];
+      statusEl.textContent="Backend connected ✓";
+      statusEl.style.background="#eff7ef";statusEl.style.color="#3f6d43";
+      render();
+    }catch(error){
+      statusEl.textContent="Backend not connected";
+      statusEl.style.background="#fff0ee";statusEl.style.color="#9b4a41";
+      body.innerHTML=`<tr><td colspan="7"><div class="empty">Could not load live bookings.<br><small>${esc(error.message)}</small></div></td></tr>`;
+    }
+  }
+
+  async function changeStatus(id,status){
+    try{
+      const response=await fetch(`/api/bookings/${id}`,{
+        method:"PATCH",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({status})
+      });
+      const result=await response.json();
+      if(!response.ok||result.success===false) throw new Error(result.error||result.message||"Could not update booking.");
+      showToast("Booking status updated ✓");
+      await loadBookings();
+    }catch(error){
+      showToast(error.message||"Could not update booking.");
+      await loadBookings();
+    }
+  }
+  window.changeStatus=changeStatus;
+
+  function viewBooking(id){
+    const b=bookings.find(x=>Number(x.id)===Number(id));
+    if(!b)return;
+    modalTitle.textContent=`Booking #${b.id}`;
+    modalDetails.innerHTML=`
+      <div class="detail"><b>Customer</b><span>${esc(b.customer_name)} · ${esc(b.phone)}</span></div>
+      <div class="detail"><b>Reservation</b><span>${esc(b.booking_date)} at ${esc(b.booking_time)} · ${esc(b.guests)} guest(s)</span></div>
+      <div class="detail"><b>Occasion</b><span>${esc(b.occasion||"No special occasion")}</span></div>
+      <div class="detail"><b>Special Request</b><span>${esc(b.special_request||"No special request")}</span></div>
+      <div class="detail"><b>Status</b><span>${esc(b.status||"pending")}</span></div>
+      <div class="detail"><b>Received</b><span>${esc(b.created_at||"")}</span></div>
+    `;
+    modal.classList.add("show");
+  }
+  window.viewBooking=viewBooking;
+
+  document.getElementById("closeModal").addEventListener("click",()=>modal.classList.remove("show"));
+  modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")modal.classList.remove("show")});
+  filters.forEach(btn=>btn.addEventListener("click",()=>{
+    filters.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    activeStatus=btn.dataset.status;
+    render();
+  }));
+  search.addEventListener("input",render);
+  document.getElementById("refreshBtn").addEventListener("click",loadBookings);
+
+  loadBookings();
+  setInterval(loadBookings,30000);
+</script>
+</body>
+</html>

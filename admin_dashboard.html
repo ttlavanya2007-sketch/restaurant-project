@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Flavour restaurant admin dashboard.">
+  <title>The Flavour | Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#171411;--soft:#6b625a;--paper:#fff;--cream:#f8f4ee;--gold:#d7a44f;
+      --line:#e8e0d7;--green:#3f6d43;--red:#9b4a41;--shadow:0 15px 40px rgba(25,20,14,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"DM Sans",sans-serif;background:#f6f2ec;color:var(--ink);line-height:1.5}
+    a{text-decoration:none;color:inherit}
+    button{font:inherit;border:0;cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+    .sidebar{background:#1a1511;color:#fff;padding:20px 14px;position:sticky;top:0;height:100vh}
+    .brand{display:flex;align-items:center;gap:10px;padding:8px 10px 24px}
+    .brand-mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-weight:800}
+    .brand-name{font:700 1.12rem "Playfair Display",serif}
+    .brand-sub{display:block;color:#9f978f;font-size:.52rem;letter-spacing:.13em;text-transform:uppercase}
+    .nav{display:grid;gap:5px}.sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:8px 10px;}.website-label{margin-top:10px}
+    .nav a{text-decoration:none;padding:11px 12px;border-radius:11px;color:#bcb4ae;font-size:.79rem;font-weight:700;transition:.2s}
+    .nav a:hover,.nav a.active{background:#2a221c;color:#fff}
+    .nav a.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .sidebar-note{margin:20px 8px 0;padding:14px;border:1px solid #3a3028;border-radius:14px;background:#211b16;color:#9f978f;font-size:.68rem}
+    .main{padding:26px;min-width:0}
+    .top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:22px}
+    .eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;font-weight:800}
+    h1{font:700 clamp(2rem,4vw,3.2rem)/1 "Playfair Display",serif;margin-top:4px}
+    .top-right{display:flex;align-items:center;gap:8px}
+    .refresh{padding:10px 14px;border-radius:10px;background:var(--ink);color:#fff;font-size:.74rem;font-weight:800}
+    .status{padding:9px 11px;border-radius:10px;background:#eff7ef;color:var(--green);font-size:.7rem;font-weight:800;border:1px solid #d6e8d3}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 7px 22px rgba(25,20,14,.04)}
+    .stat-label{font-size:.68rem;color:var(--soft);font-weight:700}
+    .stat-value{font:700 2rem/1.1 "Playfair Display",serif;margin-top:7px}
+    .stat small{display:block;color:#9a918a;font-size:.62rem;margin-top:5px}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 7px 22px rgba(25,20,14,.04);overflow:hidden}
+    .card-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .card-head h2{font:700 1.55rem/1 "Playfair Display",serif}
+    .card-head span{font-size:.67rem;color:var(--soft)}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:640px}
+    th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #eee7df;font-size:.68rem;vertical-align:middle}
+    th{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:#8b8178;background:#fcfaf7}
+    tbody tr:hover{background:#fffcf8}
+    .pill{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:.59rem;font-weight:800}
+    .pill.pending{background:#fff4da;color:#8f681d}.pill.confirmed{background:#edf7ef;color:#3f6d43}
+    .pill.cancelled{background:#fff0ee;color:#9b4a41}.pill.completed{background:#eeeafa;color:#5c4d89}
+    .actions{display:flex;gap:5px;flex-wrap:wrap}
+    .mini{padding:7px 9px;border-radius:8px;background:var(--cream);font-size:.58rem;font-weight:800}
+    .mini.confirm{background:#edf7ef;color:#3f6d43}
+    .mini.cancel{background:#fff0ee;color:#9b4a41}
+    .order-list{display:grid;gap:0}
+    .order{padding:14px 16px;border-bottom:1px solid #eee7df}
+    .order:last-child{border-bottom:0}
+    .order-top{display:flex;justify-content:space-between;gap:10px}
+    .order-name{font-weight:800;font-size:.76rem}
+    .order-total{font-weight:800;font-size:.74rem}
+    .order-meta{font-size:.61rem;color:var(--soft);margin-top:4px}
+    .order-items{margin-top:7px;color:#6b625a;font-size:.63rem}
+    .empty{padding:26px 16px;text-align:center;color:#8e857d;font-size:.72rem}
+    .loading{opacity:.6}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;padding:10px 15px;border-radius:999px;font-size:.72rem;transition:.25s;z-index:3000}
+    .toast.show{transform:translate(-50%,0);opacity:1}
+    @media(max-width:1100px){
+      .app{grid-template-columns:220px 1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .grid{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:static;height:auto;padding:10px 12px}
+      .brand{padding:5px 6px 10px}
+      .nav{display:flex;overflow:auto}
+      .nav a{white-space:nowrap}
+      .sidebar-note{display:none}
+      .main{padding:16px}
+      .top{align-items:flex-start;flex-direction:column}
+      .top-right{width:100%;justify-content:space-between}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:460px){
+      .stats{grid-template-columns:1fr}
+      .card-head{align-items:flex-start;flex-direction:column}
+    }
+  
+    /* ===== COMMON ADMIN SIDEBAR ===== */
+    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+    .sidebar{
+      position:fixed;inset:0 auto 0 0;width:250px;height:100vh;
+      background:#1a1511;color:#fff;padding:20px 14px;display:flex;flex-direction:column;
+      z-index:100;overflow-y:auto
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.09)}
+    .brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-size:.8rem;font-weight:800}
+    .brand-name,.brand-text{font:700 1.12rem/1 "Playfair Display",serif;color:#fff;white-space:nowrap}
+    .brand-sub{display:block;margin-top:3px;color:#9f978f;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+    .sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:18px 10px 8px}
+    .website-label{margin-top:4px}
+    .nav{display:grid;gap:5px}
+    .nav a,.side-link{
+      min-height:43px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:10px;
+      color:#bcb4ae;font-size:.76rem;font-weight:700;text-decoration:none!important;
+      transition:background .2s,color .2s
+    }
+    .nav a:hover,.nav a.active,.side-link:hover,.side-link.active{background:#2a221c;color:#fff}
+    .nav a.active,.side-link.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .side-icon{width:23px;flex:0 0 23px;text-align:center}
+    .logout{width:100%;min-height:43px;margin-top:auto;border-radius:10px;background:rgba(255,255,255,.05);color:#c9c1bb;font-size:.74rem;font-weight:800;text-align:center}
+    .sidebar-bottom{margin-top:auto}
+    .main{grid-column:2;min-width:0}
+    @media(max-width:800px){
+      .app{display:block}
+      .sidebar{position:static;width:100%;height:auto;padding:10px 12px;overflow:visible}
+      .brand{min-height:58px;padding:5px 6px 10px}
+      .sidebar-label{padding:12px 6px 6px}
+      .nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav a,.side-link{flex:0 0 auto;min-height:40px;padding:0 11px;white-space:nowrap}
+      .sidebar-bottom{margin-top:8px}
+      .logout{display:block}
+      .main{grid-column:auto}
+    }
+
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+  <div class="brand"><div class="brand-mark">TF</div><div><div class="brand-name">The Flavour</div><span class="brand-sub">Owner Admin</span></div></div>
+  <div class="sidebar-label">Overview</div>
+  <nav class="nav">
+    <a href="admin_dashboard.html" class="active"><span class="side-icon">⌂</span>Dashboard</a>
+    <a href="menu_management.html"><span class="side-icon">◫</span>Menu Management</a>
+    <a href="orders.html"><span class="side-icon">🛒</span>Orders</a>
+    <a href="bookings.html"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html"><span class="side-icon">♟</span>Customers</a>
+  </nav>
+  <div class="sidebar-label website-label">Website</div>
+  <nav class="nav"><a href="index.html"><span class="side-icon">↗</span>View Website</a></nav>
+  <div class="sidebar-bottom"><button class="logout" id="logout">↪ Logout</button></div>
+</aside>
+
+  <main class="main">
+    <section class="top">
+      <div>
+        <div class="eyebrow">Owner panel</div>
+        <h1>Dashboard</h1>
+      </div>
+      <div class="top-right">
+        <div class="status" id="backendStatus">Checking backend…</div>
+        <button class="refresh" id="refreshBtn">↻ Refresh</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Today's Bookings</div>
+        <div class="stat-value" id="todayBookings">0</div>
+        <small>Bookings scheduled for today</small>
+      </div>
+      <div class="stat">
+        <div class="stat-label">New Orders</div>
+        <div class="stat-value" id="newOrders">0</div>
+        <small>Pending online orders</small>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-value" id="totalCustomers">0</div>
+        <small>Customers in your database</small>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" id="totalRevenue">₹0</div>
+        <small>All saved orders</small>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="card-head">
+          <h2>Recent Bookings</h2>
+          <span id="bookingCountLabel">0 bookings</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Guests</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsBody">
+              <tr><td colspan="6"><div class="empty">Loading bookings…</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Recent Orders</h2>
+          <span id="orderCountLabel">0 orders</span>
+        </div>
+        <div class="order-list" id="ordersList">
+          <div class="empty">Loading orders…</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const bookingsBody = document.getElementById("bookingsBody");
+  const ordersList = document.getElementById("ordersList");
+  const backendStatus = document.getElementById("backendStatus");
+  const toast = document.getElementById("toast");
+  let toastTimer;
+
+  function money(value){
+    return `₹${Math.round(Number(value || 0)).toLocaleString("en-IN")}`;
+  }
+
+  function showToast(message){
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+  }
+
+  function statusClass(status){
+    return String(status || "pending").toLowerCase().replace(/\s+/g,"-");
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[char]));
+  }
+
+  async function getJson(url, options = {}){
+    const response = await fetch(url, options);
+    let data = {};
+    try { data = await response.json(); } catch(_){}
+    if(!response.ok){
+      throw new Error(data.error || data.message || `Request failed (${response.status})`);
+    }
+    return data;
+  }
+
+  function renderBookings(bookings){
+    document.getElementById("bookingCountLabel").textContent =
+      `${bookings.length} booking${bookings.length === 1 ? "" : "s"}`;
+
+    if(!bookings.length){
+      bookingsBody.innerHTML = `<tr><td colspan="6"><div class="empty">No bookings yet.</div></td></tr>`;
+      return;
+    }
+
+    bookingsBody.innerHTML = bookings.slice(0,10).map(booking => `
+      <tr>
+        <td><strong>${escapeHtml(booking.customer_name)}</strong><br><span style="color:#8b8178">${escapeHtml(booking.phone)}</span></td>
+        <td>${escapeHtml(booking.booking_date)}</td>
+        <td>${escapeHtml(booking.booking_time)}</td>
+        <td>${escapeHtml(booking.guests)}</td>
+        <td><span class="pill ${statusClass(booking.status)}">${escapeHtml(booking.status)}</span></td>
+        <td>
+          <div class="actions">
+            ${booking.status === "pending" ? `<button class="mini confirm" onclick="updateBooking(${booking.id}, 'confirmed')">Confirm</button>` : ""}
+            ${booking.status !== "cancelled" && booking.status !== "completed" ? `<button class="mini cancel" onclick="updateBooking(${booking.id}, 'cancelled')">Cancel</button>` : ""}
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function renderOrders(orders){
+    document.getElementById("orderCountLabel").textContent =
+      `${orders.length} order${orders.length === 1 ? "" : "s"}`;
+
+    if(!orders.length){
+      ordersList.innerHTML = `<div class="empty">No orders yet.</div>`;
+      return;
+    }
+
+    ordersList.innerHTML = orders.slice(0,8).map(order => {
+      const items = Array.isArray(order.items) ? order.items : [];
+      const itemText = items.length
+        ? items.map(item => `${escapeHtml(item.name)} × ${escapeHtml(item.quantity)}`).join(", ")
+        : "Order items unavailable";
+
+      return `
+        <div class="order">
+          <div class="order-top">
+            <div class="order-name">Order #${escapeHtml(order.id)} · ${escapeHtml(order.customer_name)}</div>
+            <div class="order-total">${money(order.total)}</div>
+          </div>
+          <div class="order-meta">${escapeHtml(order.phone)} · ${escapeHtml(order.created_at || "")}</div>
+          <div class="order-items">${itemText}</div>
+          <div class="actions" style="margin-top:8px">
+            <span class="pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span>
+            ${order.status === "pending" ? `<button class="mini confirm" onclick="updateOrder(${order.id}, 'confirmed')">Confirm</button>` : ""}
+            ${["pending","confirmed","preparing","ready"].includes(order.status) ? `<button class="mini" onclick="updateOrder(${order.id}, 'completed')">Complete</button>` : ""}
+            ${order.status !== "cancelled" && order.status !== "completed" ? `<button class="mini cancel" onclick="updateOrder(${order.id}, 'cancelled')">Cancel</button>` : ""}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function startOfToday(){
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,"0");
+    const d = String(now.getDate()).padStart(2,"0");
+    return `${y}-${m}-${d}`;
+  }
+
+  async function loadDashboard(){
+    document.body.classList.add("loading");
+    try{
+      const [health, bookings, orders, customers] = await Promise.all([
+        getJson("/api/health"),
+        getJson("/api/bookings"),
+        getJson("/api/orders"),
+        getJson("/api/customers")
+      ]);
+
+      backendStatus.textContent = "Backend connected ✓";
+      backendStatus.style.background = "#eff7ef";
+      backendStatus.style.color = "#3f6d43";
+
+      const today = startOfToday();
+      const todaysBookings = bookings.filter(b => b.booking_date === today);
+      const pendingOrders = orders.filter(o => o.status === "pending");
+      const revenue = orders.reduce((sum, o) => {
+        const status = String(o.status || "").toLowerCase();
+        return status === "cancelled" ? sum : sum + Number(o.total || 0);
+      }, 0);
+
+      document.getElementById("todayBookings").textContent = todaysBookings.length;
+      document.getElementById("newOrders").textContent = pendingOrders.length;
+      document.getElementById("totalCustomers").textContent = customers.length;
+      document.getElementById("totalRevenue").textContent = money(revenue);
+
+      renderBookings(bookings);
+      renderOrders(orders);
+    }catch(error){
+      console.error(error);
+      backendStatus.textContent = "Backend not connected";
+      backendStatus.style.background = "#fff0ee";
+      backendStatus.style.color = "#9b4a41";
+
+      bookingsBody.innerHTML = `<tr><td colspan="6"><div class="empty">Could not load live bookings.<br><small>${escapeHtml(error.message)}</small></div></td></tr>`;
+      ordersList.innerHTML = `<div class="empty">Could not load live orders.<br><small>${escapeHtml(error.message)}</small></div>`;
+    }finally{
+      document.body.classList.remove("loading");
+    }
+  }
+
+  async function updateBooking(id, status){
+    try{
+      await getJson(`/api/bookings/${id}`, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({status})
+      });
+      showToast("Booking updated successfully ✓");
+      loadDashboard();
+    }catch(error){
+      showToast(error.message || "Could not update booking");
+    }
+  }
+
+  async function updateOrder(id, status){
+    try{
+      await getJson(`/api/orders/${id}`, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({status})
+      });
+      showToast("Order updated successfully ✓");
+      loadDashboard();
+    }catch(error){
+      showToast(error.message || "Could not update order");
+    }
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", loadDashboard);
+  loadDashboard();
+  setInterval(loadDashboard, 30000);
+</script>
+</body>
+</html>

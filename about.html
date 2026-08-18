@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About The Flavour Restaurant & Cafe.">
+  <title>The Flavour | About</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#171411;--soft:#625a53;--paper:#fff;--cream:#f8f4ee;--warm:#f5eee5;
+      --gold:#d7a44f;--gold2:#efc77d;--line:#e8e0d7;--shadow:0 15px 40px rgba(25,20,14,.08);
+      --container:1180px;--r:18px;--ease:280ms cubic-bezier(.2,.7,.2,1)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    button{font:inherit;border:0;cursor:pointer}
+    img{display:block;width:100%;object-fit:cover}
+    .container{width:min(var(--container),calc(100% - 36px));margin:auto}
+
+    .topbar{position:fixed;inset:0 0 auto;z-index:1000;background:rgba(255,255,255,.84);backdrop-filter:blur(17px);border-bottom:1px solid rgba(255,255,255,.52);transition:background var(--ease),box-shadow var(--ease)}
+    .topbar.scrolled{background:rgba(255,255,255,.97);box-shadow:0 8px 30px rgba(28,21,14,.07)}
+    .nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:inline-flex;align-items:center;gap:10px}
+    .brand-mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:13px;font-weight:800}
+    .brand-text{font:700 1.25rem "Playfair Display",serif}.brand-sub{display:block;font:700 .5rem "DM Sans",sans-serif;letter-spacing:.16em;color:#7d756e;text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:24px}
+    .nav-links a{font-weight:600;font-size:.9rem;padding:5px 0;position:relative}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:0;height:2px;border-radius:99px;background:var(--gold);transition:width var(--ease)}
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .nav-actions{display:flex;gap:8px}
+    .nav-btn{min-height:44px;padding:0 16px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;transition:transform var(--ease)}
+    .nav-btn:hover{transform:translateY(-2px)}
+    .nav-btn.dark{background:var(--ink);color:#fff}.nav-btn.gold{background:var(--gold);color:#17120d}
+    .mobile-toggle{display:none;width:42px;height:42px;border-radius:11px;background:#fff;border:1px solid var(--line)}
+
+    .hero{padding:128px 0 48px;background:var(--cream)}
+    .hero-grid{display:grid;grid-template-columns:1fr .76fr;gap:24px;align-items:end}
+    .eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;margin-bottom:8px}
+    .hero h1{font:700 clamp(3rem,6.2vw,5.2rem)/.95 "Playfair Display",serif;letter-spacing:-.03em;margin-bottom:12px}
+    .hero p{font-size:.9rem;color:var(--soft);max-width:640px}
+    .hero-image{height:220px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+    .hero-image img{height:100%;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+    .hero-image:hover img{transform:scale(1.05)}
+
+    .section{padding:52px 0}
+    .story{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+    .story-image{border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+    .story-image img{aspect-ratio:1.1/1;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+    .story-image:hover img{transform:scale(1.04)}
+    .story-copy{padding:6px}
+    .story-copy h2{font:700 clamp(2.1rem,3.8vw,3.4rem)/1.04 "Playfair Display",serif;margin-bottom:11px}
+    .story-copy p{font-size:.84rem;color:#6f665f;margin-bottom:9px}
+    .story-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:17px}
+    .stat{padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff}
+    .stat strong{display:block;color:#9c7029;font-size:1.2rem;line-height:1}.stat span{display:block;color:#867c74;font-size:.62rem;margin-top:4px}
+
+    .value-section{background:var(--cream)}
+    .head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}
+    .head h2{font:700 clamp(2rem,3.7vw,3.2rem)/1.03 "Playfair Display",serif}
+    .head p{font-size:.8rem;color:var(--soft);max-width:500px}
+    .values{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .value{padding:19px;border-radius:14px;border:1px solid var(--line);background:#fff;transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease)}
+    .value:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#dcc7a8}
+    .icon{width:39px;height:39px;border-radius:11px;background:#f7eee1;color:#9c7029;display:grid;place-items:center;margin-bottom:11px}
+    .value h3{font:700 1rem "Playfair Display",serif;margin-bottom:4px}.value p{font-size:.69rem;color:#7c726a}
+
+    .journey{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px;align-items:start}
+    .journey-image{position:sticky;top:95px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);min-height:500px}
+    .journey-image img{height:100%;min-height:500px}
+    .timeline{display:grid;gap:10px}
+    .timeline-card{padding:18px;border:1px solid var(--line);border-radius:14px;background:#fff;transition:transform var(--ease),box-shadow var(--ease),border-color var(--ease)}
+    .timeline-card:hover{transform:translateX(6px);box-shadow:var(--shadow);border-color:#dcc7a8}
+    .year{color:#a57b30;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.11em}
+    .timeline-card h3{font:700 1.15rem "Playfair Display",serif;margin:5px 0}.timeline-card p{font-size:.7rem;color:#7c726a}
+
+    .quote{margin-top:22px;background:#1d1915;color:#fff;border-radius:18px;padding:32px 26px;box-shadow:var(--shadow)}
+    .quote blockquote{font:700 clamp(1.8rem,3.6vw,3rem)/1.08 "Playfair Display",serif}
+    .quote p{font-size:.72rem;color:#c8bfb8;margin-top:7px}
+
+    .cta{margin-top:18px;padding:25px;border-radius:17px;border:1px solid var(--line);background:var(--cream);display:flex;justify-content:space-between;align-items:center;gap:18px}
+    .cta h2{font:700 clamp(1.8rem,3.4vw,2.7rem)/1.05 "Playfair Display",serif}.cta p{font-size:.74rem;color:#766d65;margin-top:4px}
+    .cta-btn{min-height:43px;padding:0 16px;border-radius:10px;background:var(--gold);color:#17120d;font-size:.76rem;font-weight:800;white-space:nowrap}
+
+    .footer{margin-top:18px;background:#181410;color:#fff;padding:36px 0 24px}
+    .footer-grid{display:grid;grid-template-columns:1.4fr .8fr .9fr;gap:25px;padding-bottom:24px}
+    .footer-copy{color:#aaa09a;font-size:.72rem;max-width:320px;margin-top:9px}.footer-title{font-size:.78rem;font-weight:800;margin-bottom:8px}
+    .footer-links{display:grid;gap:6px}.footer-links a,.footer-links span{color:#a9a09a;font-size:.7rem}
+    .bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#817872;font-size:.64rem}
+
+    .mobile-bottom{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:1100;grid-template-columns:repeat(5,1fr);padding:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:15px;box-shadow:0 15px 40px rgba(30,22,14,.16)}
+    .mobile-bottom a{min-height:44px;border-radius:10px;display:grid;place-items:center;align-content:center;gap:2px;color:#776e66;font-size:.61rem}.mobile-bottom a.active{background:#f7eee1;color:#18130f;font-weight:800}.micon{font-size:.9rem}
+
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+    .reveal.visible{opacity:1;transform:none}.d1{transition-delay:80ms}.d2{transition-delay:160ms}.d3{transition-delay:240ms}
+
+    @media(max-width:1000px){
+      .story{grid-template-columns:1fr}.journey{grid-template-columns:1fr}.journey-image{position:relative;top:auto;min-height:380px}.journey-image img{min-height:380px}
+      .values{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:850px){
+      .nav-links,.nav-actions{display:none}.mobile-toggle{display:grid;place-items:center}
+      .nav.open .nav-links{position:absolute;left:18px;right:18px;top:70px;display:grid;gap:2px;padding:10px;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+      .nav.open .nav-links a{padding:11px;border-radius:9px}.nav.open .nav-links a:hover{background:#faf6f1}.nav.open .nav-links a::after{display:none}
+    }
+    @media(max-width:620px){
+      .container{width:min(var(--container),calc(100% - 26px))}
+      .hero{padding:118px 0 36px}.hero-grid{grid-template-columns:1fr}.hero-image{height:180px}
+      .head{align-items:flex-start;flex-direction:column}.values{grid-template-columns:1fr}
+      .story-stats{grid-template-columns:repeat(3,1fr)}.stat{padding:9px}.stat strong{font-size:1rem}
+      .journey-image,.journey-image img{min-height:310px}.cta{flex-direction:column;align-items:flex-start}.footer-grid{grid-template-columns:1fr}
+      .footer{padding-bottom:80px}.mobile-bottom{display:grid}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">TF</span>
+          <span><span class="brand-text">The Flavour</span><span class="brand-sub">Restaurant & Cafe</span></span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a><a href="menu.html">Menu</a><a href="order.html">Order</a><a href="#about" class="active">About</a><a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-btn dark" href="menu.html">◫ Explore Menu</a><a class="nav-btn gold" href="booking.html">▣ Book a Table</a>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="about">
+    <div class="container hero-grid">
+      <div class="reveal" style="opacity:1;transform:none">
+        <div class="eyebrow">Our story · Our people · Our table</div>
+        <h1>More than a meal.</h1>
+        <p>Discover the story, values and experience behind The Flavour — a place built around good food, warm hospitality and memorable moments.</p>
+      </div>
+      <div class="hero-image reveal d1" style="opacity:1;transform:none">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=88" alt="Restaurant interior">
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section">
+      <div class="container story">
+        <div class="story-image reveal">
+          <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1300&q=88" alt="Food and restaurant table">
+        </div>
+        <div class="story-copy reveal d1">
+          <div class="eyebrow">About The Flavour</div>
+          <h2>A place where flavour feels like home.</h2>
+          <p>We started with a simple idea: serve food that people genuinely love, in a space where they feel comfortable staying a little longer.</p>
+          <p>Every dish is prepared with carefully chosen ingredients, balanced flavours and attention to presentation. From everyday favourites to special evenings, we want every table to feel memorable.</p>
+          <p>For us, hospitality matters just as much as food. A warm welcome, thoughtful service and a comfortable atmosphere complete the experience.</p>
+
+          <div class="story-stats">
+            <div class="stat"><strong>10+</strong><span>Years Experience</span></div>
+            <div class="stat"><strong>50+</strong><span>Signature Dishes</span></div>
+            <div class="stat"><strong>10K+</strong><span>Happy Guests</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section value-section">
+      <div class="container">
+        <div class="head reveal">
+          <div><div class="eyebrow">What matters to us</div><h2>Our values.</h2></div>
+          <p>Simple principles that guide the food, service and atmosphere our guests experience.</p>
+        </div>
+
+        <div class="values">
+          <article class="value reveal"><div class="icon">✦</div><h3>Fresh Ingredients</h3><p>Quality ingredients selected to keep every plate fresh and full of flavour.</p></article>
+          <article class="value reveal d1"><div class="icon">♨</div><h3>Thoughtful Cooking</h3><p>Recipes prepared carefully with balance, comfort and beautiful presentation.</p></article>
+          <article class="value reveal d2"><div class="icon">♡</div><h3>Warm Hospitality</h3><p>We want every guest to feel welcomed, comfortable and well looked after.</p></article>
+          <article class="value reveal d3"><div class="icon">◎</div><h3>Memorable Moments</h3><p>Because great meals become special when shared with the right people.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="head reveal">
+          <div><div class="eyebrow">Our journey</div><h2>How it all came together.</h2></div>
+          <p>A simple timeline that can later be updated with the restaurant owner's real story and milestones.</p>
+        </div>
+
+        <div class="journey">
+          <div class="journey-image reveal">
+            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1300&q=88" alt="Restaurant dining experience">
+          </div>
+
+          <div class="timeline">
+            <article class="timeline-card reveal d1">
+              <div class="year">2016 · The Beginning</div>
+              <h3>A simple dream</h3>
+              <p>The Flavour began with a small team, a few favourite recipes and a passion for bringing people together around food.</p>
+            </article>
+            <article class="timeline-card reveal d2">
+              <div class="year">2019 · Growing Together</div>
+              <h3>More tables, more memories</h3>
+              <p>As more guests discovered the food, the menu expanded and the dining space grew with them.</p>
+            </article>
+            <article class="timeline-card reveal d3">
+              <div class="year">2023 · A New Chapter</div>
+              <h3>Making dining easier</h3>
+              <p>Online ordering and table reservations were added to make the guest experience simpler and more convenient.</p>
+            </article>
+            <article class="timeline-card reveal d1">
+              <div class="year">Today · Looking Ahead</div>
+              <h3>Still creating moments</h3>
+              <p>The focus remains the same: delicious food, thoughtful service and a place people love to return to.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="quote reveal">
+          <blockquote>“Good food is even better when the moment feels special.”</blockquote>
+          <p>A simple philosophy behind every dish, table and experience.</p>
+        </div>
+
+        <div class="cta reveal">
+          <div>
+            <div class="eyebrow">Ready for your next visit?</div>
+            <h2>Bring your favourite people.</h2>
+            <p>Explore the menu, order online or reserve a table.</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a href="menu.html" class="cta-btn">Explore Menu →</a>
+            <a href="booking.html" class="cta-btn">Book a Table →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a href="index.html" class="brand"><span class="brand-mark" style="background:#fff;color:#171411">TF</span><span><span class="brand-text" style="color:#fff">The Flavour</span><span class="brand-sub" style="color:#9f978f">Restaurant & Cafe</span></span></a><p class="footer-copy">Fresh food, warm hospitality and memorable moments.</p></div>
+        <div><div class="footer-title">Quick Links</div><div class="footer-links"><a href="index.html">Home</a><a href="menu.html">Menu</a><a href="order.html">Order Online</a><a href="contact.html">Contact</a></div></div>
+        <div><div class="footer-title">Contact</div><div class="footer-links"><a href="tel:+919876543210">+91 98765 43210</a><a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">@theflavour.restaurant</a><span>Chennai, Tamil Nadu</span></div></div>
+      </div>
+      <div class="bottom"><span>© 2026 The Flavour Restaurant & Cafe</span><span>About page</span></div>
+    </div>
+  </footer>
+
+  <nav class="mobile-bottom">
+    <a href="index.html"><span class="micon">⌂</span><span>Home</span></a>
+    <a href="menu.html"><span class="micon">◫</span><span>Menu</span></a>
+    <a href="order.html"><span class="micon">🛒</span><span>Order</span></a>
+    <a href="#about" class="active"><span class="micon">♙</span><span>About</span></a>
+    <a href="contact.html"><span class="micon">☎</span><span>Contact</span></a>
+  </nav>
+
+  <script>
+    const topbar=document.getElementById("topbar");
+    const nav=document.getElementById("nav");
+    const mobileToggle=document.getElementById("mobileToggle");
+
+    window.addEventListener("scroll",()=>topbar.classList.toggle("scrolled",window.scrollY>20));
+
+    mobileToggle.addEventListener("click",()=>{
+      const open=nav.classList.toggle("open");
+      mobileToggle.textContent=open?"✕":"☰";
+      mobileToggle.setAttribute("aria-expanded",String(open));
+    });
+
+    document.querySelectorAll(".nav-links a").forEach(link=>link.addEventListener("click",()=>{
+      nav.classList.remove("open");mobileToggle.textContent="☰";mobileToggle.setAttribute("aria-expanded","false");
+    }));
+
+    const observer=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){entry.target.classList.add("visible");obs.unobserve(entry.target);}
+      });
+    },{threshold:.12});
+
+    document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+  </script>
+</body>
+</html>

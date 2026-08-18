@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Flavour | Menu Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500,600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171411;--soft:#625a53;--muted:#8c8178;--paper:#fff;--cream:#f8f4ee;--warm:#f5eee5;--gold:#d7a44f;--line:#e7dfd5;--green:#5d8b59;--red:#b75e55;--shadow:0 14px 36px rgba(25,20,14,.07);--r:18px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:"DM Sans",sans-serif;color:var(--ink);background:#faf8f5;line-height:1.5}a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}img{display:block;width:100%;object-fit:cover}.container{width:min(1260px,calc(100% - 32px));margin:auto}
+.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:#1b1713;color:#fff;padding:23px 14px;display:flex;flex-direction:column;z-index:10}.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;border-bottom:1px solid rgba(255,255,255,.09)}.brand-mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--ink);font-size:12px;font-weight:800}.brand-text{font:700 1.18rem "Playfair Display",serif;display:block}.brand-sub{display:block;font-size:.49rem;letter-spacing:.16em;color:#9d948d;text-transform:uppercase}.sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:22px 10px 8px}.side-links{display:grid;gap:4px}.side-link{min-height:43px;padding:0 11px;border-radius:10px;display:flex;align-items:center;gap:10px;color:#aaa29b;font-size:.76rem;font-weight:700}.side-link:hover,.side-link.active{background:rgba(215,164,79,.11);color:#fff}.side-link.active{box-shadow:inset 3px 0 var(--gold)}.side-icon{width:23px;text-align:center}.sidebar-bottom{margin-top:auto}.logout{width:100%;min-height:42px;border-radius:10px;background:rgba(255,255,255,.05);color:#c1b8b1;font-size:.74rem;font-weight:700}
+.main{grid-column:2;min-width:0}.topbar{min-height:76px;position:sticky;top:0;z-index:5;background:rgba(250,248,245,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.topbar-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.menu-toggle{display:none;width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:#fff}.page-title h1{font:700 clamp(1.8rem,3vw,2.6rem)/1 "Playfair Display",serif}.page-title p{font-size:.71rem;color:var(--muted);margin-top:4px}.profile{display:flex;align-items:center;gap:9px;padding:5px 8px 5px 5px;border:1px solid var(--line);background:#fff;border-radius:12px}.avatar{width:33px;height:33px;border-radius:10px;display:grid;place-items:center;background:var(--gold);font-weight:800;font-size:.72rem}.profile strong{font-size:.69rem;display:block}.profile span{font-size:.59rem;color:var(--muted)}
+.content{padding:28px 0 60px}.page-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:14px}.eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.67rem;font-weight:800;margin-bottom:7px}.page-head h2{font:700 clamp(1.9rem,3.5vw,2.8rem)/1.02 "Playfair Display",serif}.page-head p{font-size:.7rem;color:var(--soft);max-width:520px}.primary{min-height:44px;padding:0 15px;border-radius:10px;background:var(--gold);color:#17120d;font-size:.73rem;font-weight:800}
+.toolbar{padding:12px;background:#fff;border:1px solid var(--line);border-radius:15px;display:flex;align-items:center;justify-content:space-between;gap:10px}.filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.filter{flex:0 0 auto;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:#faf7f2;color:#6b625a;font-size:.7rem;font-weight:800}.filter.active{background:var(--gold);border-color:var(--gold);color:#17120d}.search{position:relative;min-width:230px}.search span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8d847b}.search input{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 11px 0 36px;outline:none;font-size:.72rem}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.sum{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}.sum span{font-size:.63rem;color:var(--muted)}.sum strong{display:block;font:700 1.3rem "Playfair Display",serif;margin-top:4px}
+.layout{display:grid;grid-template-columns:1.4fr .6fr;gap:14px;margin-top:14px}.card{background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 7px 22px rgba(25,20,14,.04);overflow:hidden}.card-head{min-height:57px;padding:0 16px;border-bottom:1px solid #efe9e3;display:flex;align-items:center;justify-content:space-between}.card-head h3{font:700 1.18rem "Playfair Display",serif}.card-head span{font-size:.62rem;color:var(--muted)}
+.table-wrap{overflow:auto}.table-wrap table{width:100%;border-collapse:collapse;min-width:680px}.table-wrap th,.table-wrap td{text-align:left;padding:9px;border-bottom:1px solid #f0ebe5;font-size:.65rem}.table-wrap th{font-size:.59rem;text-transform:uppercase;letter-spacing:.08em;color:#8a8077;background:#fcfaf8}.food-row{display:flex;align-items:center;gap:8px}.food-row img{width:34px;height:34px;border-radius:8px}.food-row strong{font-size:.67rem}.food-row span{display:block;color:#998f87;font-size:.57rem}.status{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:.57rem;font-weight:800}.on{background:#edf6ec;color:#4f7b4d}.off{background:#fff0ee;color:#a55449}.pop{background:#fff5df;color:#946921}.actions{display:flex;gap:5px}.action{width:29px;height:29px;border-radius:8px;border:1px solid var(--line);background:#fff}
+.formbox{padding:14px}.addbox{padding:15px;border-radius:13px;background:var(--cream);border:1px solid var(--line)}.addbox h4{font:700 1.25rem "Playfair Display",serif;margin-bottom:4px}.addbox p{font-size:.64rem;color:#7f756d;margin-bottom:12px}.form{display:grid;gap:9px}.field label{display:block;font-size:.63rem;font-weight:800;color:#5b534c;margin-bottom:4px}.field input,.field select,.field textarea{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line);outline:none;background:#fff;font-size:.69rem}.field textarea{min-height:80px;resize:vertical}.checks{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{display:flex;align-items:center;gap:6px;font-size:.63rem;color:#756b63}.check input{accent-color:var(--gold)}.save{width:100%;min-height:42px;border-radius:9px;background:var(--ink);color:#fff;font-size:.72rem;font-weight:800}.clear{width:100%;min-height:38px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:.68rem;font-weight:800;margin-top:5px}.help{margin-top:10px;padding:12px;border-radius:10px;background:#1d1915;color:#fff;font-size:.61rem}.help strong{display:block;margin-bottom:3px}
+.overlay{position:fixed;inset:0;background:rgba(18,14,10,.42);z-index:20;display:none}.overlay.show{display:block}.drawer{position:fixed;left:0;top:0;bottom:0;width:245px;background:#1b1713;color:#fff;z-index:21;transform:translateX(-100%);transition:transform .28s;padding:20px 14px}.drawer.show{transform:none}.drawer-close{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.07);color:#fff}.toast{position:fixed;left:50%;bottom:22px;z-index:30;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;border-radius:999px;padding:10px 15px;font-size:.7rem;transition:transform .3s,opacity .3s}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}.reveal.visible{opacity:1;transform:none}.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+@media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{grid-column:1}.menu-toggle{display:grid;place-items:center}.layout{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.container{width:min(1260px,calc(100% - 24px))}.page-head{align-items:flex-start;flex-direction:column}.page-head .primary{width:100%}.toolbar{display:block;padding:9px}.filters{margin-bottom:9px}.search{min-width:0;width:100%}.summary{grid-template-columns:1fr 1fr}.profile div{display:none}.content{padding-bottom:80px}}
+@media(max-width:470px){.summary{grid-template-columns:1fr}}
+
+    /* ===== COMMON ADMIN SIDEBAR ===== */
+    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+    .sidebar{
+      position:fixed;inset:0 auto 0 0;width:250px;height:100vh;
+      background:#1a1511;color:#fff;padding:20px 14px;display:flex;flex-direction:column;
+      z-index:100;overflow-y:auto
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.09)}
+    .brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-size:.8rem;font-weight:800}
+    .brand-name,.brand-text{font:700 1.12rem/1 "Playfair Display",serif;color:#fff;white-space:nowrap}
+    .brand-sub{display:block;margin-top:3px;color:#9f978f;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+    .sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:18px 10px 8px}
+    .website-label{margin-top:4px}
+    .nav{display:grid;gap:5px}
+    .nav a,.side-link{
+      min-height:43px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:10px;
+      color:#bcb4ae;font-size:.76rem;font-weight:700;text-decoration:none!important;
+      transition:background .2s,color .2s
+    }
+    .nav a:hover,.nav a.active,.side-link:hover,.side-link.active{background:#2a221c;color:#fff}
+    .nav a.active,.side-link.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .side-icon{width:23px;flex:0 0 23px;text-align:center}
+    .logout{width:100%;min-height:43px;margin-top:auto;border-radius:10px;background:rgba(255,255,255,.05);color:#c9c1bb;font-size:.74rem;font-weight:800;text-align:center}
+    .sidebar-bottom{margin-top:auto}
+    .main{grid-column:2;min-width:0}
+    @media(max-width:800px){
+      .app{display:block}
+      .sidebar{position:static;width:100%;height:auto;padding:10px 12px;overflow:visible}
+      .brand{min-height:58px;padding:5px 6px 10px}
+      .sidebar-label{padding:12px 6px 6px}
+      .nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav a,.side-link{flex:0 0 auto;min-height:40px;padding:0 11px;white-space:nowrap}
+      .sidebar-bottom{margin-top:8px}
+      .logout{display:block}
+      .main{grid-column:auto}
+    }
+
+  </style>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">TF</div><div><div class="brand-name">The Flavour</div><span class="brand-sub">Owner Admin</span></div></div>
+  <div class="sidebar-label">Overview</div>
+  <nav class="nav">
+    <a href="admin_dashboard.html"><span class="side-icon">⌂</span>Dashboard</a>
+    <a href="menu_management.html" class="active"><span class="side-icon">◫</span>Menu Management</a>
+    <a href="orders.html"><span class="side-icon">🛒</span>Orders</a>
+    <a href="bookings.html"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html"><span class="side-icon">♟</span>Customers</a>
+  </nav>
+  <div class="sidebar-label website-label">Website</div>
+  <nav class="nav"><a href="index.html"><span class="side-icon">↗</span>View Website</a></nav>
+  <div class="sidebar-bottom"><button class="logout" id="logout">↪ Logout</button></div>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <div class="brand"><span class="brand-mark">TF</span><span><span class="brand-text">The Flavour</span><span class="brand-sub">Owner Admin</span></span></div>
+  <div class="sidebar-label">Overview</div>
+  <nav class="side-links">
+    <a href="admin_dashboard.html" class="side-link"><span class="side-icon">⌂</span>Dashboard</a>
+    <a href="#menu" class="side-link active"><span class="side-icon">◫</span>Menu Management</a>
+    <a href="orders.html" class="side-link"><span class="side-icon">🛒</span>Orders</a>
+    <a href="bookings.html" class="side-link"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html" class="side-link"><span class="side-icon">♟</span>Customers</a>
+  </nav>
+  <div class="sidebar-label">Website</div><nav class="side-links"><a href="index.html" class="side-link"><span class="side-icon">↗</span>View Website</a></nav>
+  <div class="sidebar-bottom"><button class="logout" id="mobileLogout">↪ Logout</button></div>
+</aside>
+
+<main class="main" id="menu">
+<header class="topbar"><div class="container topbar-inner">
+  <div style="display:flex;align-items:center;gap:10px"><button class="menu-toggle" id="menuToggle">☰</button><div class="page-title"><h1>Menu Management</h1><p>Control what customers see on the menu.</p></div></div>
+  <div class="profile"><div class="avatar">OW</div><div><strong>Restaurant Owner</strong><span>Administrator</span></div></div>
+</div></header>
+
+<div class="content"><div class="container">
+<section class="page-head reveal">
+  <div><div class="eyebrow">Owner controls</div><h2>Manage your menu.</h2><p>Add, edit, hide or promote food items without changing code.</p></div>
+  <button class="primary" id="addNew">＋ Add New Food</button>
+</section>
+
+<section class="toolbar reveal">
+  <div class="filters" id="filters">
+    <button class="filter active" data-cat="all">All</button><button class="filter" data-cat="starters">Starters</button><button class="filter" data-cat="main">Main Course</button><button class="filter" data-cat="biryani">Biryani</button><button class="filter" data-cat="pizza">Pizza</button><button class="filter" data-cat="burgers">Burgers</button><button class="filter" data-cat="pasta">Pasta</button><button class="filter" data-cat="desserts">Desserts</button><button class="filter" data-cat="beverages">Beverages</button>
+  </div>
+  <div class="search"><span>⌕</span><input id="search" placeholder="Search menu item..."></div>
+</section>
+
+<section class="summary">
+  <div class="sum reveal"><span>Total Items</span><strong id="total">7</strong></div>
+  <div class="sum reveal d1"><span>Available</span><strong id="available">6</strong></div>
+  <div class="sum reveal d2"><span>Unavailable</span><strong id="unavailable">1</strong></div>
+  <div class="sum reveal d3"><span>Popular</span><strong id="popular">3</strong></div>
+</section>
+
+<section class="layout">
+<div class="card reveal">
+  <div class="card-head"><h3>Food Items</h3><span id="result">Showing all items</span></div>
+  <div class="table-wrap">
+  <table><thead><tr><th>Food</th><th>Category</th><th>Price</th><th>Available</th><th>Popular</th><th>Action</th></tr></thead>
+  <tbody id="tbody"></tbody></table>
+  </div>
+</div>
+
+<aside class="card reveal d1" id="addPanel">
+  <div class="card-head"><h3 id="formTitle">Add Food Item</h3><span>Owner controls</span></div>
+  <div class="formbox"><div class="addbox">
+    <h4>Menu details</h4><p>Later this form will save directly to the restaurant database.</p>
+    <form class="form" id="form">
+      <div class="field"><label for="name">Food Name</label><input id="name" required placeholder="Chicken Biryani"></div>
+      <div class="field"><label for="cat">Category</label><select id="cat" required><option value="">Select category</option><option value="starters">Starters</option><option value="main">Main Course</option><option value="biryani">Biryani</option><option value="pizza">Pizza</option><option value="burgers">Burgers</option><option value="pasta">Pasta</option><option value="desserts">Desserts</option><option value="beverages">Beverages</option></select></div>
+      <div class="field"><label for="price">Price (₹)</label><input id="price" type="number" min="0" required placeholder="250"></div>
+      <div class="field"><label for="desc">Description</label><textarea id="desc" placeholder="Short food description"></textarea></div>
+
+      <div class="field">
+        <label for="image">Food Image</label>
+        <input id="image" type="file" accept="image/*">
+        <div id="imagePreview" style="margin-top:7px;display:none;border:1px solid var(--line);border-radius:9px;padding:7px;background:#fff">
+          <img id="previewImg" src="" alt="Food preview" style="width:100%;height:125px;object-fit:cover;border-radius:7px">
+        </div>
+        <div style="font-size:.57rem;color:#8a7e74;margin-top:5px">Choose a food photo from your PC/mobile. Later this will be saved to the backend/storage.</div>
+      </div>
+
+      <div class="checks"><label class="check"><input id="avail" type="checkbox" checked> Available</label><label class="check"><input id="pop" type="checkbox"> Popular</label></div>
+      <button class="save" type="submit">Save Food Item</button><button class="clear" type="button" id="clear">Clear Form</button>
+    </form>
+    <div id="help" style="display:none;margin-top:9px;padding:9px;border-radius:8px;background:#edf6ec;color:#4f7b4d;font-size:.62rem">Saved in demo mode. Backend/database connection comes next.</div>
+  </div>
+  <div class="help"><strong>💡 Owner tip</strong> Turn Availability OFF when food is sold out. Turn Popular ON to show it in homepage Popular Dishes.</div>
+  </div>
+</aside>
+</section>
+</div></div>
+</main></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const tbody = document.getElementById("tbody");
+const filters = [...document.querySelectorAll(".filter")];
+const search = document.getElementById("search");
+const resultText = document.getElementById("result");
+const form = document.getElementById("form");
+const nameEl = document.getElementById("name");
+const catEl = document.getElementById("cat");
+const priceEl = document.getElementById("price");
+const descEl = document.getElementById("desc");
+const availEl = document.getElementById("avail");
+const popEl = document.getElementById("pop");
+const imageEl = document.getElementById("image");
+const previewBox = document.getElementById("imagePreview");
+const previewImg = document.getElementById("previewImg");
+const help = document.getElementById("help");
+const title = document.getElementById("formTitle");
+const saveBtn = document.querySelector(".save");
+
+let data = [];
+let active = "all";
+let editingId = null;
+let imageUrl = "";
+let toastTimer;
+
+const toast = document.getElementById("toast");
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.style.opacity = "1";
+  toast.style.transform = "translate(-50%,0)";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translate(-50%,90px)";
+  }, 1900);
+}
+
+function setHelp(message, success = true) {
+  help.textContent = message;
+  help.style.display = "block";
+  help.style.background = success ? "#edf6ec" : "#fff0ee";
+  help.style.color = success ? "#4f7b4d" : "#a55449";
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[ch]));
+}
+
+function imageSrc(item) {
+  return item.image_url ||
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=80";
+}
+
+function updateSummary() {
+  document.getElementById("total").textContent = data.length;
+  document.getElementById("available").textContent =
+    data.filter(x => Number(x.available) === 1).length;
+  document.getElementById("unavailable").textContent =
+    data.filter(x => Number(x.available) === 0).length;
+  document.getElementById("popular").textContent =
+    data.filter(x => Number(x.popular) === 1).length;
+}
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const visible = data.filter(item =>
+    (active === "all" || item.category === active) &&
+    (!q || item.name.toLowerCase().includes(q))
+  );
+
+  tbody.innerHTML = "";
+  resultText.textContent =
+    `Showing ${visible.length} item${visible.length === 1 ? "" : "s"}`;
+
+  visible.forEach(item => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>
+        <div class="food-row">
+          <img src="${imageSrc(item)}" alt="${escapeHtml(item.name)}">
+          <div>
+            <strong>${escapeHtml(item.name)}</strong>
+            <span>${escapeHtml(item.description || "Menu item")}</span>
+          </div>
+        </div>
+      </td>
+      <td>${escapeHtml(item.category)}</td>
+      <td><b>₹${Number(item.price).toLocaleString("en-IN")}</b></td>
+      <td><button class="status ${Number(item.available) ? "on" : "off"} avail">
+        ${Number(item.available) ? "ON" : "OFF"}
+      </button></td>
+      <td><button class="status ${Number(item.popular) ? "on" : "pop"} popBtn">
+        ${Number(item.popular) ? "ON" : "OFF"}
+      </button></td>
+      <td>
+        <div class="actions">
+          <button class="action edit">✎</button>
+          <button class="action del">⌫</button>
+        </div>
+      </td>
+    `;
+
+    tr.querySelector(".avail").addEventListener(
+      "click",
+      () => updateMenuItem(item.id, {available: !Number(item.available)})
+    );
+
+    tr.querySelector(".popBtn").addEventListener(
+      "click",
+      () => updateMenuItem(item.id, {popular: !Number(item.popular)})
+    );
+
+    tr.querySelector(".edit").addEventListener("click", () => editItem(item));
+    tr.querySelector(".del").addEventListener("click", () => deleteItem(item));
+
+    tbody.appendChild(tr);
+  });
+
+  updateSummary();
+}
+
+async function loadMenu() {
+  try {
+    const response = await fetch("/api/menu");
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.error || "Could not load menu.");
+    data = Array.isArray(result) ? result : [];
+    render();
+
+    if (!data.length) {
+      setHelp("Database is empty. Add a food item on the right.", true);
+    }
+  } catch (error) {
+    console.error(error);
+    setHelp("Could not load menu from Flask. Make sure python app.py is running.", false);
+    showToast("Could not load menu ❌");
+  }
+}
+
+async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await fetch("/api/upload-image", {
+    method: "POST",
+    body: formData
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.error || "Image upload failed.");
+  }
+
+  return result.image_url;
+}
+
+imageEl.addEventListener("change", async () => {
+  const file = imageEl.files?.[0];
+
+  if (!file) {
+    imageUrl = editingId ? (data.find(x => x.id === editingId)?.image_url || "") : "";
+    previewBox.style.display = imageUrl ? "block" : "none";
+    previewImg.src = imageUrl;
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    previewImg.src = reader.result;
+    previewBox.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+
+  try {
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Uploading...";
+    imageUrl = await uploadImage(file);
+    showToast("Image uploaded ✅");
+    setHelp("Image uploaded. Now click Save Food Item.", true);
+  } catch (error) {
+    console.error(error);
+    imageUrl = "";
+    showToast("Image upload failed ❌");
+    setHelp(error.message, false);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = editingId ? "Update Food Item" : "Save Food Item";
+  }
+});
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  if (imageEl.files?.[0] && !imageUrl) {
+    setHelp("Please wait for the image upload to finish.", false);
+    return;
+  }
+
+  const payload = {
+    name: nameEl.value.trim(),
+    category: catEl.value,
+    price: Number(priceEl.value),
+    description: descEl.value.trim(),
+    image_url: imageUrl,
+    available: availEl.checked,
+    popular: popEl.checked
+  };
+
+  try {
+    saveBtn.disabled = true;
+    saveBtn.textContent = editingId ? "Updating..." : "Saving...";
+
+    const response = await fetch(
+      editingId ? `/api/menu/${editingId}` : "/api/menu",
+      {
+        method: editingId ? "PATCH" : "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Could not save menu item.");
+    }
+
+    showToast(editingId ? "Food updated and saved ✅" : "Food saved to database ✅");
+    await loadMenu();
+    clearForm();
+  } catch (error) {
+    console.error(error);
+    setHelp(error.message, false);
+    showToast("Save failed ❌");
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = editingId ? "Update Food Item" : "Save Food Item";
+  }
+});
+
+async function updateMenuItem(id, changes) {
+  try {
+    const response = await fetch(`/api/menu/${id}`, {
+      method: "PATCH",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(changes)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Update failed.");
+    }
+
+    await loadMenu();
+    showToast("Menu updated ✅");
+  } catch (error) {
+    console.error(error);
+    showToast("Update failed ❌");
+  }
+}
+
+async function deleteItem(item) {
+  if (!confirm(`Delete "${item.name}"?`)) return;
+
+  try {
+    const response = await fetch(`/api/menu/${item.id}`, {method:"DELETE"});
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Delete failed.");
+    }
+
+    await loadMenu();
+    showToast("Food deleted ✅");
+  } catch (error) {
+    console.error(error);
+    showToast("Delete failed ❌");
+  }
+}
+
+function editItem(item) {
+  editingId = item.id;
+  title.textContent = "Edit Food Item";
+  saveBtn.textContent = "Update Food Item";
+
+  nameEl.value = item.name || "";
+  catEl.value = item.category || "";
+  priceEl.value = item.price ?? "";
+  descEl.value = item.description || "";
+  availEl.checked = Number(item.available) === 1;
+  popEl.checked = Number(item.popular) === 1;
+
+  imageUrl = item.image_url || "";
+  previewImg.src = imageUrl;
+  previewBox.style.display = imageUrl ? "block" : "none";
+  help.style.display = "none";
+
+  document.getElementById("addPanel").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+}
+
+function clearForm() {
+  editingId = null;
+  title.textContent = "Add Food Item";
+  saveBtn.textContent = "Save Food Item";
+  form.reset();
+  availEl.checked = true;
+  popEl.checked = false;
+  imageUrl = "";
+  imageEl.value = "";
+  previewBox.style.display = "none";
+  previewImg.src = "";
+  help.style.display = "none";
+}
+
+filters.forEach(filter => {
+  filter.addEventListener("click", () => {
+    filters.forEach(x => x.classList.remove("active"));
+    filter.classList.add("active");
+    active = filter.dataset.cat;
+    render();
+  });
+});
+
+search.addEventListener("input", render);
+document.getElementById("clear").addEventListener("click", clearForm);
+document.getElementById("addNew").addEventListener("click", () => {
+  clearForm();
+  document.getElementById("addPanel").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+loadMenu();
+
+document.getElementById("logout").onclick=()=>{if(confirm("Log out?"))location.href="admin_login.html"};
+document.getElementById("mobileLogout").onclick=()=>{if(confirm("Log out?"))location.href="admin_login.html"};
+
+const drawer=document.getElementById("drawer"),overlay=document.getElementById("overlay");
+document.getElementById("menuToggle").onclick=()=>{drawer.classList.add("show");overlay.classList.add("show")};
+document.getElementById("drawerClose").onclick=()=>{drawer.classList.remove("show");overlay.classList.remove("show")};
+overlay.onclick=()=>{drawer.classList.remove("show");overlay.classList.remove("show")};
+
+const observer=new IntersectionObserver((entries,obs)=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");obs.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(x=>observer.observe(x));
+render();
+</script>
+</body>
+</html>

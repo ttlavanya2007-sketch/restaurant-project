@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Flavour Restaurant & Cafe menu.">
+  <title>The Flavour | Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#171411;--ink-soft:#625a53;--cream:#f8f4ee;--paper:#fff;--gold:#d7a44f;
+      --gold-soft:#efc77d;--line:#e8e0d7;--shadow:0 15px 40px rgba(25,20,14,.08);
+      --container:1180px;--r:16px;--t:280ms cubic-bezier(.2,.7,.2,1)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}button{border:0;cursor:pointer}
+    img{display:block;width:100%;object-fit:cover}
+    .container{width:min(var(--container),calc(100% - 36px));margin:auto}
+
+    .topbar{position:fixed;inset:0 0 auto;z-index:1000;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.55);transition:background var(--t),box-shadow var(--t)}
+    .topbar.scrolled{background:rgba(255,255,255,.96);box-shadow:0 8px 30px rgba(28,21,14,.07)}
+    .nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:inline-flex;align-items:center;gap:10px;min-width:0}
+    .brand-mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:13px;font-weight:800}
+    .brand-text{font:700 1.25rem "Playfair Display",serif;white-space:nowrap}
+    .brand-sub{display:block;font:700 .5rem "DM Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7d756e}
+    .nav-links{display:flex;align-items:center;gap:24px}
+    .nav-links a{font-weight:600;font-size:.9rem;position:relative;padding:5px 0}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:0;height:2px;background:var(--gold);border-radius:99px;transition:width var(--t)}
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .nav-actions{display:flex;gap:8px}
+    .nav-btn{min-height:44px;padding:0 16px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;transition:transform var(--t)}
+    .nav-btn:hover{transform:translateY(-2px)}
+    .nav-btn.dark{background:var(--ink);color:#fff}.nav-btn.gold{background:var(--gold);color:#17120d}
+    .mobile-toggle{display:none;width:42px;height:42px;border-radius:11px;background:#fff;border:1px solid var(--line)}
+
+    .hero{padding:135px 0 55px;background:var(--cream)}
+    .hero-inner{display:grid;grid-template-columns:1fr .8fr;gap:28px;align-items:end}
+    .eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;margin-bottom:8px}
+    .hero h1{font:700 clamp(3rem,6.5vw,5.5rem)/.95 "Playfair Display",serif;letter-spacing:-.03em;margin-bottom:14px}
+    .hero p{color:var(--ink-soft);max-width:610px;font-size:.92rem}
+    .hero-image{border-radius:18px;overflow:hidden;box-shadow:var(--shadow);height:250px}
+    .hero-image img{height:100%;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+    .hero-image:hover img{transform:scale(1.05)}
+
+    .toolbar{position:sticky;top:74px;z-index:700;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .toolbar-inner{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .tabs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+    .tab{flex:0 0 auto;min-height:39px;padding:0 13px;border-radius:9px;background:#faf7f2;border:1px solid var(--line);color:#6c645d;font-size:.77rem;font-weight:800;transition:transform var(--t),background var(--t),color var(--t)}
+    .tab:hover{transform:translateY(-2px)}.tab.active{background:var(--gold);border-color:var(--gold);color:#17120d}
+    .search{position:relative;min-width:240px}.search input{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 12px 0 36px;outline:none}
+    .search input:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.1)}
+    .search span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8d847b}
+
+    .section{padding:52px 0}
+    .head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}
+    .head h2{font:700 clamp(2rem,3.8vw,3.3rem)/1.02 "Playfair Display",serif}
+    .head p{color:var(--ink-soft);max-width:510px;font-size:.82rem}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .card{border:1px solid var(--line);border-radius:var(--r);background:#fff;overflow:hidden;box-shadow:0 7px 22px rgba(25,20,14,.045);transition:transform var(--t),box-shadow var(--t),border-color var(--t)}
+    .card:hover{transform:translateY(-7px);box-shadow:var(--shadow);border-color:#ddc9ac}
+    .card-img{position:relative;overflow:hidden}
+    .card-img img{aspect-ratio:1/ .88;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+    .card:hover .card-img img{transform:scale(1.08)}
+    .tag{position:absolute;left:9px;top:9px;background:var(--gold);color:#17120d;padding:5px 8px;border-radius:99px;font-size:.64rem;font-weight:800}
+    .heart{position:absolute;right:9px;top:9px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.92);color:#615950}
+    .body{padding:13px}
+    .name{font:700 1rem/1.12 "Playfair Display",serif;margin-bottom:5px}
+    .desc{font-size:.68rem;color:#81776f;min-height:30px}
+    .meta{display:flex;justify-content:space-between;gap:7px;margin-top:8px;font-size:.68rem}
+    .rating{color:#98702e}.price{font-weight:800}
+    .actions{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:10px}
+    .add,.view{min-height:36px;border-radius:9px;font-size:.68rem;font-weight:800}
+    .add{background:var(--gold);color:#17120d}.view{background:#f6efe6;color:#4d463f;padding:0 10px}
+    .loading-menu{border:1px dashed var(--line);border-radius:16px;background:#fff;padding:30px}
+    .empty{display:none;text-align:center;padding:40px;border:1px dashed var(--line);border-radius:16px;color:#766d65}
+    .cta-strip{margin-top:28px;padding:26px;border-radius:18px;background:#1d1915;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden}
+    .cta-strip h3{font:700 1.9rem/1.05 "Playfair Display",serif;margin-bottom:5px}.cta-strip p{color:#c7beb7;font-size:.78rem}
+    .cta-btn{min-height:43px;padding:0 16px;border-radius:10px;background:var(--gold);color:#17120d;font-weight:800;font-size:.78rem;white-space:nowrap}
+    .footer{margin-top:20px;background:#181410;color:#fff;padding:36px 0 24px}
+    .footer-grid{display:grid;grid-template-columns:1.4fr .8fr .9fr;gap:25px;padding-bottom:24px}
+    .footer-copy{color:#aaa09a;font-size:.72rem;max-width:320px;margin-top:9px}.footer-title{font-size:.78rem;font-weight:800;margin-bottom:8px}
+    .footer-links{display:grid;gap:6px}.footer-links a,.footer-links span{color:#a9a09a;font-size:.7rem}
+    .bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#817872;font-size:.64rem}
+    .mobile-bottom{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:1100;grid-template-columns:repeat(5,1fr);padding:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:15px;box-shadow:0 15px 40px rgba(30,22,14,.16)}
+    .mobile-bottom a{min-height:44px;border-radius:10px;display:grid;place-items:center;align-content:center;gap:2px;color:#776e66;font-size:.61rem}.mobile-bottom a.active{background:#f7eee1;color:#18130f;font-weight:800}
+    .micon{font-size:.9rem}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}.reveal.visible{opacity:1;transform:none}
+    .d1{transition-delay:80ms}.d2{transition-delay:160ms}.d3{transition-delay:240ms}
+
+    @media(max-width:1100px){
+      .grid{grid-template-columns:repeat(3,1fr)}.hero-inner{grid-template-columns:1fr}.hero-image{height:230px}.footer-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:850px){
+      .nav-links,.nav-actions{display:none}.mobile-toggle{display:grid;place-items:center}
+      .nav.open .nav-links{position:absolute;left:18px;right:18px;top:70px;display:grid;gap:2px;padding:10px;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+      .nav.open .nav-links a{padding:11px;border-radius:9px}.nav.open .nav-links a:hover{background:#faf6f1}.nav.open .nav-links a::after{display:none}
+      .toolbar{top:70px}.toolbar-inner{display:block;padding:9px 0}.tabs{margin-bottom:8px}.search{min-width:0;width:100%}
+    }
+    @media(max-width:620px){
+      .container{width:min(var(--container),calc(100% - 26px))}
+      .hero{padding:120px 0 36px}.hero-image{height:190px}.hero h1{font-size:3rem}
+      .grid{grid-template-columns:1fr 1fr;gap:10px}.body{padding:11px}.name{font-size:.9rem}.desc{font-size:.65rem}
+      .add,.view{font-size:.63rem}.view{padding:0 8px}
+      .section{padding:44px 0}.head{align-items:flex-start;flex-direction:column;margin-bottom:18px}
+      .cta-strip{align-items:flex-start;flex-direction:column}.footer-grid{grid-template-columns:1fr}.footer{padding-bottom:82px}.mobile-bottom{display:grid}
+    }
+    @media(max-width:420px){.grid{grid-template-columns:1fr}.hero-image{height:175px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">TF</span>
+          <span><span class="brand-text">The Flavour</span><span class="brand-sub">Restaurant & Cafe</span></span>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="#top" class="active">Menu</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+          <a class="nav-btn dark" href="order.html">🛒 Order Online</a>
+          <a class="nav-btn gold" href="booking.html">▣ Book a Table</a>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <div>
+        <div class="eyebrow">Fresh from our kitchen</div>
+        <h1>Our Menu.</h1>
+        <p>Discover comforting classics, signature favourites and freshly prepared dishes. The owner will later be able to manage food, prices, photos and availability from the admin dashboard.</p>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1500&q=88" alt="Restaurant table with food">
+      </div>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="container toolbar-inner">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-category="all">All</button>
+        <button class="tab" data-category="starters">Starters</button>
+        <button class="tab" data-category="main">Main Course</button>
+        <button class="tab" data-category="biryani">Biryani</button>
+        <button class="tab" data-category="pizza">Pizza</button>
+        <button class="tab" data-category="burgers">Burgers</button>
+        <button class="tab" data-category="pasta">Pasta</button>
+        <button class="tab" data-category="desserts">Desserts</button>
+        <button class="tab" data-category="beverages">Beverages</button>
+      </div>
+      <div class="search"><span>⌕</span><input id="search" type="search" placeholder="Search food..."></div>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <div class="head reveal">
+        <div>
+          <div class="eyebrow">Choose your favourites</div>
+          <h2>Delicious, simple,<br>easy to order.</h2>
+        </div>
+        <p id="resultText">Showing all dishes</p>
+      </div>
+
+      <div class="grid" id="grid">
+        <div class="loading-menu" id="loadingMenu" style="grid-column:1/-1;text-align:center;padding:40px;color:#766d65">
+          Loading menu...
+        </div>
+      </div>
+
+      <div class="empty" id="empty"><strong>No dishes found.</strong><div style="margin-top:4px">Try another category or search term.</div></div>
+
+      <div class="cta-strip reveal">
+        <div><div class="eyebrow" style="color:#efc77d">Ready to order?</div><h3>Found something you love?</h3><p>Add your favourites to the cart and continue with our simple ordering flow.</p></div>
+        <a href="order.html" class="cta-btn">Order Online →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="index.html" class="brand"><span class="brand-mark" style="background:#fff;color:#171411">TF</span><span><span class="brand-text" style="color:#fff">The Flavour</span><span class="brand-sub" style="color:#9f978f">Restaurant & Cafe</span></span></a>
+          <p class="footer-copy">Fresh food, warm hospitality and easy ordering.</p>
+        </div>
+        <div><div class="footer-title">Quick Links</div><div class="footer-links"><a href="index.html">Home</a><a href="#top">Menu</a><a href="about.html">About</a><a href="contact.html">Contact</a></div></div>
+        <div><div class="footer-title">Order</div><div class="footer-links"><a href="order.html">Order Online</a><a href="booking.html">Book a Table</a><span>Mon–Sun · 11 AM–11 PM</span></div></div>
+      </div>
+      <div class="bottom"><span>© 2026 The Flavour Restaurant & Cafe</span><span>Menu page</span></div>
+    </div>
+  </footer>
+
+  <nav class="mobile-bottom">
+    <a href="index.html"><span class="micon">⌂</span><span>Home</span></a>
+    <a href="#top" class="active"><span class="micon">◫</span><span>Menu</span></a>
+    <a href="order.html"><span class="micon">🛒</span><span>Order</span></a>
+    <a href="booking.html"><span class="micon">▣</span><span>Booking</span></a>
+    <a href="contact.html"><span class="micon">☎</span><span>Contact</span></a>
+  </nav>
+
+  <div id="toast" style="position:fixed;left:50%;bottom:22px;z-index:1200;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;border-radius:999px;padding:11px 16px;box-shadow:0 15px 35px rgba(0,0,0,.18);transition:transform .3s,opacity .3s;font-size:.78rem"></div>
+
+  <script>
+    const topbar = document.getElementById("topbar");
+    const nav = document.getElementById("nav");
+    const mobileToggle = document.getElementById("mobileToggle");
+    const tabs = [...document.querySelectorAll(".tab")];
+    const search = document.getElementById("search");
+    const resultText = document.getElementById("resultText");
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    const toast = document.getElementById("toast");
+    let activeCategory = "all";
+    let timer;
+    let menuItems = [];
+    let cards = [];
+
+    window.addEventListener("scroll",()=>topbar.classList.toggle("scrolled",window.scrollY>20));
+
+    mobileToggle.addEventListener("click",()=>{
+      const open=nav.classList.toggle("open");
+      mobileToggle.textContent=open?"✕":"☰";
+      mobileToggle.setAttribute("aria-expanded",String(open));
+    });
+
+    document.querySelectorAll(".nav-links a").forEach(link=>{
+      link.addEventListener("click",()=>{
+        nav.classList.remove("open");
+        mobileToggle.textContent="☰";
+        mobileToggle.setAttribute("aria-expanded","false");
+      });
+    });
+
+    function escapeHtml(value){
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[char]));
+    }
+
+    function money(value){
+      return `₹${Math.round(Number(value || 0)).toLocaleString("en-IN")}`;
+    }
+
+    function normalizeCategory(value){
+      const text=String(value || "").trim().toLowerCase();
+      if(text.includes("starter")) return "starters";
+      if(text.includes("main")) return "main";
+      if(text.includes("biryani")) return "biryani";
+      if(text.includes("pizza")) return "pizza";
+      if(text.includes("burger")) return "burgers";
+      if(text.includes("pasta")) return "pasta";
+      if(text.includes("dessert")) return "desserts";
+      if(text.includes("beverage") || text.includes("drink")) return "beverages";
+      return text.replace(/[^a-z0-9]+/g,"-");
+    }
+
+    function showToast(message){
+      toast.textContent=message;
+      toast.style.opacity="1";
+      toast.style.transform="translate(-50%,0)";
+      clearTimeout(timer);
+      timer=setTimeout(()=>{
+        toast.style.opacity="0";
+        toast.style.transform="translate(-50%,90px)";
+      },1800);
+    }
+
+    function createCard(item,index){
+      const card=document.createElement("article");
+      card.className=`card reveal ${index%4===1?"d1":index%4===2?"d2":index%4===3?"d3":""}`;
+      card.dataset.category=normalizeCategory(item.category);
+      card.dataset.name=String(item.name || "").toLowerCase();
+
+      const imageUrl=item.image_url || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=88";
+      const available=Number(item.available) !== 0;
+      const popular=Number(item.popular) === 1;
+
+      card.innerHTML=`
+        <div class="card-img">
+          ${popular ? '<span class="tag">Popular</span>' : ''}
+          <button class="heart" type="button" aria-label="Favourite">♡</button>
+          <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy">
+          ${!available ? '<div style="position:absolute;inset:0;background:rgba(20,16,12,.55);display:grid;place-items:center;color:#fff;font-weight:800;font-size:.78rem">Currently Unavailable</div>' : ''}
+        </div>
+        <div class="body">
+          <div class="name">${escapeHtml(item.name)}</div>
+          <div class="desc">${escapeHtml(item.description || "Freshly prepared from our kitchen.")}</div>
+          <div class="meta">
+            <span class="rating">★★★★★</span>
+            <span class="price">${money(item.price)}</span>
+          </div>
+          <div class="actions">
+            <button class="add" type="button" data-item="${escapeHtml(item.name)}" ${!available ? "disabled style=\"opacity:.5;cursor:not-allowed\"" : ""}>Add to Cart</button>
+            <button class="view" type="button" ${!available ? "disabled style=\"opacity:.5;cursor:not-allowed\"" : ""}>View</button>
+          </div>
+        </div>
+      `;
+
+      const heart=card.querySelector(".heart");
+      heart.addEventListener("click",()=>{
+        heart.textContent=heart.textContent==="♡"?"♥":"♡";
+        heart.style.color=heart.textContent==="♥"?"#b77922":"#615950";
+      });
+
+      const add=card.querySelector(".add");
+      if(available){
+        add.addEventListener("click",()=>showToast(`${item.name} added to cart`));
+      }
+
+      const view=card.querySelector(".view");
+      if(available){
+        view.addEventListener("click",()=>showToast(`${item.name} · ${money(item.price)}`));
+      }
+
+      return card;
+    }
+
+    function renderMenu(items){
+      menuItems=items || [];
+      grid.innerHTML="";
+
+      if(!menuItems.length){
+        empty.style.display="block";
+        resultText.textContent="No dishes available";
+        return;
+      }
+
+      const fragment=document.createDocumentFragment();
+      menuItems.forEach((item,index)=>fragment.appendChild(createCard(item,index)));
+      grid.appendChild(fragment);
+
+      cards=[...grid.querySelectorAll(".card")];
+      cards.forEach(card=>observer.observe(card));
+      applyFilter();
+    }
+
+    function applyFilter(){
+      const query=search.value.trim().toLowerCase();
+      let count=0;
+
+      cards.forEach(card=>{
+        const matchCategory=activeCategory==="all"||card.dataset.category===activeCategory;
+        const matchSearch=!query||card.dataset.name.includes(query);
+        const show=matchCategory&&matchSearch;
+        card.style.display=show?"":"none";
+        if(show){
+          count++;
+          card.style.animation="none";
+          void card.offsetWidth;
+          card.style.animation=".5s ease both revealCard";
+        }
+      });
+
+      empty.style.display=count?"none":"block";
+      resultText.textContent=query
+        ? `Showing ${count} result${count===1?"":"s"} for "${search.value.trim()}"`
+        : `Showing ${count} dish${count===1?"":"es"}`;
+    }
+
+    tabs.forEach(tab=>{
+      tab.addEventListener("click",()=>{
+        tabs.forEach(t=>t.classList.remove("active"));
+        tab.classList.add("active");
+        activeCategory=tab.dataset.category;
+        applyFilter();
+      });
+    });
+
+    search.addEventListener("input",applyFilter);
+
+    const observer=new IntersectionObserver((entries,observerInstance)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          observerInstance.unobserve(entry.target);
+        }
+      });
+    },{threshold:.12});
+
+    async function loadMenu(){
+      const loading=document.getElementById("loadingMenu");
+      try{
+        const response=await fetch("/api/menu",{
+          headers:{"Accept":"application/json"}
+        });
+        const data=await response.json();
+
+        if(!response.ok){
+          throw new Error(data.error || "Could not load menu.");
+        }
+
+        if(loading) loading.remove();
+
+        const availableItems=(Array.isArray(data)?data:[]).filter(item=>Number(item.available)!==0);
+        renderMenu(availableItems);
+      }catch(error){
+        console.error("Menu loading error:",error);
+        if(loading) loading.remove();
+        grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;border:1px dashed var(--line);border-radius:16px;color:#9b4a41;background:#fff">
+          <strong>Could not load the live menu.</strong>
+          <div style="margin-top:5px;font-size:.7rem">${escapeHtml(error.message)}</div>
+        </div>`;
+        resultText.textContent="Menu unavailable";
+      }
+    }
+
+    loadMenu();
+
+    // Add dynamic keyframe for filter animation without extra external dependency.
+    const style=document.createElement("style");
+    style.textContent="@keyframes revealCard{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}";
+    document.head.appendChild(style);
+
+  </script>
+</body>
+</html>

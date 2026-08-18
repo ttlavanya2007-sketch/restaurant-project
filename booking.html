@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a table at The Flavour Restaurant & Cafe.">
+  <title>The Flavour | Book a Table</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#171411;--soft:#625a53;--paper:#fff;--cream:#f8f4ee;--warm:#f5eee5;
+      --gold:#d7a44f;--gold2:#efc77d;--line:#e8e0d7;--shadow:0 15px 40px rgba(25,20,14,.08);
+      --container:1180px;--r:18px;--ease:280ms cubic-bezier(.2,.7,.2,1)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+    button{border:0;cursor:pointer}
+    img{display:block;width:100%;object-fit:cover}
+    .container{width:min(var(--container),calc(100% - 36px));margin:auto}
+
+    .topbar{position:fixed;inset:0 0 auto;z-index:1000;background:rgba(255,255,255,.84);backdrop-filter:blur(17px);border-bottom:1px solid rgba(255,255,255,.52);transition:background var(--ease),box-shadow var(--ease)}
+    .topbar.scrolled{background:rgba(255,255,255,.97);box-shadow:0 8px 30px rgba(28,21,14,.07)}
+    .nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:inline-flex;align-items:center;gap:10px}
+    .brand-mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:13px;font-weight:800}
+    .brand-text{font:700 1.25rem "Playfair Display",serif}
+    .brand-sub{display:block;font:700 .5rem "DM Sans",sans-serif;letter-spacing:.16em;color:#7d756e;text-transform:uppercase}
+    .nav-links{display:flex;align-items:center;gap:24px}
+    .nav-links a{font-weight:600;font-size:.9rem;padding:5px 0;position:relative}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:0;height:2px;background:var(--gold);border-radius:99px;transition:width var(--ease)}
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .nav-actions{display:flex;gap:8px}
+    .nav-btn{min-height:44px;padding:0 16px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;transition:transform var(--ease)}
+    .nav-btn:hover{transform:translateY(-2px)}
+    .nav-btn.dark{background:var(--ink);color:#fff}.nav-btn.gold{background:var(--gold);color:#17120d}
+    .mobile-toggle{display:none;width:42px;height:42px;border-radius:11px;background:#fff;border:1px solid var(--line)}
+
+    .hero{padding:128px 0 48px;background:var(--cream)}
+    .hero-grid{display:grid;grid-template-columns:1fr .76fr;gap:24px;align-items:end}
+    .eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;font-weight:800;margin-bottom:8px}
+    .hero h1{font:700 clamp(3rem,6.2vw,5.2rem)/.95 "Playfair Display",serif;letter-spacing:-.03em;margin-bottom:12px}
+    .hero p{font-size:.9rem;color:var(--soft);max-width:620px}
+    .hero-image{height:220px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+    .hero-image img{height:100%;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+    .hero-image:hover img{transform:scale(1.05)}
+
+    .section{padding:50px 0}
+    .booking-grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:16px;align-items:stretch}
+    .image-card{border-radius:18px;overflow:hidden;position:relative;min-height:610px;box-shadow:var(--shadow)}
+    .image-card img{height:100%}
+    .image-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.55))}
+    .image-caption{position:absolute;left:20px;right:20px;bottom:20px;z-index:2;color:#fff}
+    .image-caption h2{font:700 1.9rem/1.05 "Playfair Display",serif;margin-bottom:6px}
+    .image-caption p{color:rgba(255,255,255,.82);font-size:.77rem;max-width:400px}
+
+    .panel{border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:0 8px 26px rgba(25,20,14,.05);padding:23px}
+    .panel-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:18px}
+    .panel-head h2{font:700 clamp(2rem,3.7vw,3.2rem)/1.02 "Playfair Display",serif}
+    .panel-head p{color:var(--soft);font-size:.76rem;max-width:440px}
+
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+    .field.full{grid-column:1/-1}
+    .field label{display:block;font-size:.69rem;font-weight:800;color:#5d544c;margin-bottom:5px}
+    .field input,.field select,.field textarea{width:100%;padding:10px 11px;border-radius:9px;border:1px solid var(--line);outline:none;background:#fff;color:var(--ink);font-size:.78rem;transition:border-color var(--ease),box-shadow var(--ease)}
+    .field input::placeholder,.field textarea::placeholder{color:#958a82}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.11)}
+    .field textarea{min-height:88px;resize:vertical}
+    .submit{width:100%;min-height:43px;margin-top:10px;border-radius:10px;background:var(--gold);color:#17120d;font-size:.8rem;font-weight:800;transition:transform var(--ease),box-shadow var(--ease)}
+    .submit:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(215,164,79,.18)}
+    .submit:disabled{opacity:.65;cursor:not-allowed;transform:none;box-shadow:none}
+    .tiny-note{color:#90867e;font-size:.64rem;text-align:center;margin-top:8px}
+
+    .info-strip{display:grid;grid-template-columns:repeat(3,1fr);margin-top:13px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+    .info-card{padding:13px 14px;background:#fff}.info-card:not(:last-child){border-right:1px solid var(--line)}
+    .info-card strong{display:block;font-size:.72rem;margin-bottom:3px}.info-card span{font-size:.63rem;color:#82786f}
+
+    .success{display:none;margin-top:14px;padding:14px;border-radius:12px;background:#f0f7ef;border:1px solid #d6e8d3;color:#40563e}
+    .success.show{display:block;animation:rise .45s ease both}
+    .success strong{display:block;font-size:.8rem;margin-bottom:2px}.success span{font-size:.69rem}
+
+    .steps{margin-top:18px;padding:18px;border-radius:15px;background:var(--cream);border:1px solid var(--line)}
+    .steps h3{font:700 1.3rem "Playfair Display",serif;margin-bottom:9px}
+    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .step{padding:11px;border-radius:11px;background:#fff;border:1px solid var(--line)}
+    .step b{display:block;color:#a0762c;font-size:.75rem;margin-bottom:3px}.step span{font-size:.64rem;color:#7b7169}
+
+    .quote{margin-top:22px;background:#1d1915;color:#fff;border-radius:18px;padding:27px 24px;box-shadow:var(--shadow)}
+    .quote blockquote{font:700 clamp(1.75rem,3.3vw,2.5rem)/1.08 "Playfair Display",serif}
+    .quote p{color:#c7beb7;font-size:.73rem;margin-top:6px}
+
+    .footer{margin-top:20px;background:#181410;color:#fff;padding:36px 0 24px}
+    .footer-grid{display:grid;grid-template-columns:1.4fr .8fr .9fr;gap:25px;padding-bottom:24px}
+    .footer-copy{color:#aaa09a;font-size:.72rem;max-width:320px;margin-top:9px}.footer-title{font-size:.78rem;font-weight:800;margin-bottom:8px}
+    .footer-links{display:grid;gap:6px}.footer-links a,.footer-links span{color:#a9a09a;font-size:.7rem}
+    .bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#817872;font-size:.64rem}
+
+    .mobile-bottom{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:1100;grid-template-columns:repeat(5,1fr);padding:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:15px;box-shadow:0 15px 40px rgba(30,22,14,.16)}
+    .mobile-bottom a{min-height:44px;border-radius:10px;display:grid;place-items:center;align-content:center;gap:2px;color:#776e66;font-size:.61rem}.mobile-bottom a.active{background:#f7eee1;color:#18130f;font-weight:800}.micon{font-size:.9rem}
+
+    .toast{position:fixed;left:50%;bottom:22px;z-index:1200;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;border-radius:999px;padding:10px 15px;font-size:.75rem;box-shadow:0 15px 35px rgba(0,0,0,.18);transition:transform .3s,opacity .3s}
+
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+    .reveal.visible{opacity:1;transform:none}.d1{transition-delay:80ms}.d2{transition-delay:160ms}
+    @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+    @media(max-width:1000px){.booking-grid{grid-template-columns:1fr}.image-card{min-height:450px}.info-strip{grid-template-columns:1fr}.info-card:not(:last-child){border-right:0;border-bottom:1px solid var(--line)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:850px){
+      .nav-links,.nav-actions{display:none}.mobile-toggle{display:grid;place-items:center}
+      .nav.open .nav-links{position:absolute;left:18px;right:18px;top:70px;display:grid;gap:2px;padding:10px;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+      .nav.open .nav-links a{padding:11px;border-radius:9px}.nav.open .nav-links a:hover{background:#faf6f1}.nav.open .nav-links a::after{display:none}
+    }
+    @media(max-width:620px){
+      .container{width:min(var(--container),calc(100% - 26px))}
+      .hero{padding:118px 0 36px}.hero-grid{grid-template-columns:1fr}.hero-image{height:180px}
+      .panel{padding:17px}.panel-head{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+      .submit{margin-top:8px}.steps-grid{grid-template-columns:1fr}.image-card{min-height:350px}
+      .footer-grid{grid-template-columns:1fr}.footer{padding-bottom:80px}.mobile-bottom{display:grid}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <div class="container">
+      <nav class="nav" id="nav">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">TF</span>
+          <span><span class="brand-text">The Flavour</span><span class="brand-sub">Restaurant & Cafe</span></span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a><a href="menu.html">Menu</a><a href="order.html">Order</a><a href="#booking" class="active">Booking</a><a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-actions">
+          <a class="nav-btn dark" href="menu.html">◫ Explore Menu</a><a class="nav-btn gold" href="order.html">🛒 Order Online</a>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="booking">
+    <div class="container hero-grid">
+      <div class="reveal" style="opacity:1;transform:none">
+        <div class="eyebrow">Reserve your table</div>
+        <h1>Make it a special moment.</h1>
+        <p>Choose your date, time and guests. The booking form is designed to stay simple on both desktop and mobile.</p>
+      </div>
+      <div class="hero-image reveal d1" style="opacity:1;transform:none">
+        <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=88" alt="Restaurant dining area">
+      </div>
+    </div>
+  </section>
+
+  <main class="section">
+    <div class="container booking-grid">
+      <div class="image-card reveal">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1400&q=88" alt="Restaurant table">
+        <div class="image-caption">
+          <div class="eyebrow" style="color:#efc77d">Good food. Better company.</div>
+          <h2>Your table is waiting.</h2>
+          <p>Perfect for family dinners, date nights, celebrations and relaxed evenings.</p>
+        </div>
+      </div>
+
+      <section class="panel reveal d1">
+        <div class="panel-head">
+          <div><div class="eyebrow">Table reservation</div><h2>Book your table.</h2></div>
+          <p>For now this is a frontend demo. Later this form will save directly to the database for the owner to manage.</p>
+        </div>
+
+        <form id="bookingForm" class="form-grid" method="POST" action="/api/bookings">
+          <div class="field"><label for="name">Full Name</label><input id="name" name="name" required placeholder="Your name" autocomplete="name"></div>
+          <div class="field"><label for="phone">Phone Number</label><input id="phone" name="phone" required inputmode="tel" placeholder="9876543210" autocomplete="tel"></div>
+          <div class="field"><label for="date">Date</label><input id="date" name="date" type="date" required></div>
+          <div class="field"><label for="time">Time</label><select id="time" name="time" required><option value="" selected disabled>Select time</option><option>11:30 AM</option><option>1:00 PM</option><option>6:30 PM</option><option>7:30 PM</option><option>8:30 PM</option><option>9:30 PM</option></select></div>
+          <div class="field"><label for="guests">Guests</label><select id="guests" name="guests" required><option value="" selected disabled>Select guests</option><option value="1">1 Guest</option><option value="2">2 Guests</option><option value="3">3 Guests</option><option value="4">4 Guests</option><option value="5">5 Guests</option><option value="6+">6+ Guests</option></select></div>
+          <div class="field"><label for="occasion">Occasion</label><select id="occasion" name="occasion"><option>No special occasion</option><option>Birthday</option><option>Anniversary</option><option>Family Dinner</option><option>Business Dinner</option><option>Other</option></select></div>
+          <div class="field full"><label for="request">Special Request</label><textarea id="request" name="request" placeholder="Any seating preference or special request?"></textarea></div>
+          <div class="field full"><button class="submit" id="submitBtn" type="submit">Confirm Reservation →</button></div>
+        </form>
+
+        <div id="success" class="success">
+          <strong>Reservation request prepared ✓</strong>
+          <span id="successText">Your booking details are ready for database integration.</span>
+        </div>
+
+        <div class="info-strip">
+          <div class="info-card"><strong>🕒 Opening Hours</strong><span>11 AM – 11 PM</span></div>
+          <div class="info-card"><strong>👥 Group Dining</strong><span>Contact us for larger groups</span></div>
+          <div class="info-card"><strong>☎ Need Help?</strong><span>+91 98765 43210</span></div>
+        </div>
+
+        <div class="steps">
+          <h3>How it works</h3>
+          <div class="steps-grid">
+            <div class="step"><b>01 · Fill</b><span>Enter your visit details.</span></div>
+            <div class="step"><b>02 · Send</b><span>Submit your reservation.</span></div>
+            <div class="step"><b>03 · Confirm</b><span>Owner confirms in admin.</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="container">
+      <section class="quote reveal">
+        <blockquote>“The best meals deserve the right table.”</blockquote>
+        <p>Reserve ahead and make your next dining moment feel special.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a href="index.html" class="brand"><span class="brand-mark" style="background:#fff;color:#171411">TF</span><span><span class="brand-text" style="color:#fff">The Flavour</span><span class="brand-sub" style="color:#9f978f">Restaurant & Cafe</span></span></a><p class="footer-copy">Fresh food, warm hospitality and easy reservations.</p></div>
+        <div><div class="footer-title">Quick Links</div><div class="footer-links"><a href="index.html">Home</a><a href="menu.html">Menu</a><a href="order.html">Order Online</a><a href="contact.html">Contact</a></div></div>
+        <div><div class="footer-title">Contact</div><div class="footer-links"><a href="tel:+919876543210">+91 98765 43210</a><a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">@theflavour.restaurant</a><span>Chennai, Tamil Nadu</span></div></div>
+      </div>
+      <div class="bottom"><span>© 2026 The Flavour Restaurant & Cafe</span><span>Booking page</span></div>
+    </div>
+  </footer>
+
+  <nav class="mobile-bottom">
+    <a href="index.html"><span class="micon">⌂</span><span>Home</span></a>
+    <a href="menu.html"><span class="micon">◫</span><span>Menu</span></a>
+    <a href="order.html"><span class="micon">🛒</span><span>Order</span></a>
+    <a href="#booking" class="active"><span class="micon">▣</span><span>Booking</span></a>
+    <a href="contact.html"><span class="micon">☎</span><span>Contact</span></a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const topbar=document.getElementById("topbar");
+    const nav=document.getElementById("nav");
+    const mobileToggle=document.getElementById("mobileToggle");
+    const form=document.getElementById("bookingForm");
+    const dateInput=document.getElementById("date");
+    const success=document.getElementById("success");
+    const successText=document.getElementById("successText");
+    const toast=document.getElementById("toast");
+    let toastTimer;
+
+    window.addEventListener("scroll",()=>topbar.classList.toggle("scrolled",window.scrollY>20));
+
+    mobileToggle.addEventListener("click",()=>{
+      const open=nav.classList.toggle("open");
+      mobileToggle.textContent=open?"✕":"☰";
+      mobileToggle.setAttribute("aria-expanded",String(open));
+    });
+
+    document.querySelectorAll(".nav-links a").forEach(link=>link.addEventListener("click",()=>{
+      nav.classList.remove("open");mobileToggle.textContent="☰";mobileToggle.setAttribute("aria-expanded","false");
+    }));
+
+    const now=new Date();
+    dateInput.min=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+
+    function showToast(msg){
+      toast.textContent=msg;toast.style.opacity="1";toast.style.transform="translate(-50%,0)";
+      clearTimeout(toastTimer);toastTimer=setTimeout(()=>{toast.style.opacity="0";toast.style.transform="translate(-50%,90px)"},2100);
+    }
+
+    form.addEventListener("submit",async e=>{
+      e.preventDefault();
+      if(!form.checkValidity()){form.reportValidity();return}
+
+      const submitBtn=document.getElementById("submitBtn");
+      const data=new FormData(form);
+      const payload={
+        name:String(data.get("name") || "").trim(),
+        phone:String(data.get("phone") || "").trim(),
+        date:String(data.get("date") || "").trim(),
+        time:String(data.get("time") || "").trim(),
+        guests:String(data.get("guests") || "").trim(),
+        occasion:String(data.get("occasion") || "").trim(),
+        request:String(data.get("request") || "").trim()
+      };
+
+      if(payload.phone.length < 7){
+        showToast("Please enter a valid phone number");
+        return;
+      }
+
+      submitBtn.disabled=true;
+      submitBtn.textContent="Saving Reservation...";
+
+      try{
+        const response=await fetch("/api/bookings",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Accept":"application/json"},
+          body:JSON.stringify(payload)
+        });
+
+        let result={};
+        try{ result=await response.json(); }catch(_){}
+
+        if(!response.ok || result.success===false){
+          throw new Error(result.message || "Could not save the reservation.");
+        }
+
+        successText.textContent=result.message ||
+          `Thanks ${payload.name}! Your table request for ${payload.guests} on ${payload.date} at ${payload.time} has been saved successfully.`;
+        success.classList.add("show");
+        showToast("Reservation saved successfully ✓");
+        form.reset();
+        dateInput.min=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+      }catch(error){
+        console.error("Booking save error:",error);
+        success.classList.remove("show");
+        showToast(error.message || "Booking could not be saved");
+      }finally{
+        submitBtn.disabled=false;
+        submitBtn.textContent="Confirm Reservation →";
+      }
+    });
+
+    const observer=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");obs.unobserve(entry.target)}})
+    },{threshold:.12});
+    document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+  </script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Flavour restaurant customer management page.">
+<title>The Flavour | Customers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171411;--soft:#625a53;--muted:#8c8178;--cream:#f8f4ee;--gold:#d7a44f;--line:#e7dfd5;--green:#5d8b59;--red:#b75e55;--shadow:0 14px 36px rgba(25,20,14,.07)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;color:var(--ink);background:#faf8f5;line-height:1.5}
+a{text-decoration:none;color:inherit}button,input{font:inherit}button{border:0;cursor:pointer}
+.container{width:min(1260px,calc(100% - 32px));margin:auto}
+.app{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:#1b1713;color:#fff;padding:23px 14px;display:flex;flex-direction:column;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;border-bottom:1px solid rgba(255,255,255,.09)}
+.brand-mark{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--ink);font-size:12px;font-weight:800}
+.brand-text{font:700 1.18rem "Playfair Display",serif;display:block}.brand-sub{display:block;font-size:.49rem;letter-spacing:.16em;color:#9d948d;text-transform:uppercase}
+.sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:22px 10px 8px}
+.side-links{display:grid;gap:4px}.side-link{min-height:43px;padding:0 11px;border-radius:10px;display:flex;align-items:center;gap:10px;color:#aaa29b;font-size:.76rem;font-weight:700;text-decoration:none}
+.side-link:hover,.side-link.active{background:rgba(215,164,79,.11);color:#fff}.side-link.active{box-shadow:inset 3px 0 var(--gold)}
+.side-icon{width:23px;text-align:center}.sidebar-bottom{margin-top:auto}.logout{width:100%;min-height:42px;border-radius:10px;background:rgba(255,255,255,.05);color:#c1b8b1;font-size:.74rem;font-weight:700}
+.main{grid-column:2;min-width:0}.topbar{min-height:76px;position:sticky;top:0;z-index:5;background:rgba(250,248,245,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topbar-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.menu-toggle{display:none;width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:#fff}
+.page-title h1{font:700 clamp(1.8rem,3vw,2.6rem)/1 "Playfair Display",serif}.page-title p{font-size:.71rem;color:var(--muted);margin-top:4px}
+.profile{display:flex;align-items:center;gap:9px;padding:5px 8px 5px 5px;border:1px solid var(--line);background:#fff;border-radius:12px}.avatar{width:33px;height:33px;border-radius:10px;display:grid;place-items:center;background:var(--gold);font-weight:800;font-size:.72rem}.profile strong{font-size:.69rem;display:block}.profile span{font-size:.59rem;color:var(--muted)}
+.content{padding:28px 0 60px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:14px}.eyebrow{color:#a57b30;text-transform:uppercase;letter-spacing:.16em;font-size:.67rem;font-weight:800;margin-bottom:7px}.head h2{font:700 clamp(1.9rem,3.5vw,2.8rem)/1.02 "Playfair Display",serif}.head p{font-size:.7rem;color:var(--soft);max-width:520px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}.stat span{display:block;font-size:.62rem;color:var(--muted)}.stat strong{display:block;font:700 1.35rem "Playfair Display",serif;margin-top:3px}.stat small{font-size:.59rem;color:var(--green)}
+.toolbar{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px;display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:14px}
+.search{position:relative;min-width:280px}.search span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8d847b}.search input{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;padding:0 10px 0 36px;outline:none;font-size:.71rem}.search input:focus{border-color:#d3ab70;box-shadow:0 0 0 3px rgba(215,164,79,.1)}
+.table-card{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 7px 22px rgba(25,20,14,.04)}
+.card-head{min-height:58px;padding:0 16px;border-bottom:1px solid #efe9e3;display:flex;align-items:center;justify-content:space-between;gap:10px}.card-head h3{font:700 1.18rem "Playfair Display",serif}.card-head span{font-size:.62rem;color:var(--muted)}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:10px 9px;border-bottom:1px solid #f0ebe5;font-size:.64rem;white-space:nowrap}th{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:#8a8077;background:#fcfaf8}
+.customer{display:flex;align-items:center;gap:8px}.avatar-sm{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#f0e5d7;color:#916827;font-weight:800;font-size:.68rem}.customer strong{display:block;font-size:.66rem}.customer span{display:block;color:#958b83;font-size:.57rem}
+.metric{font-weight:800}.muted{color:#8d837b;font-size:.59rem}
+.action{min-height:31px;padding:0 9px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:.61rem;font-weight:800}.action:hover{background:var(--cream)}
+.detail{display:none;margin:14px;padding:15px;border-radius:13px;background:var(--cream);border:1px solid var(--line)}.detail.show{display:block}
+.detail-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.detail-box{padding:10px;border-radius:10px;background:#fff;border:1px solid var(--line)}.detail-box span{display:block;font-size:.57rem;color:var(--muted)}.detail-box strong{display:block;font-size:.67rem;margin-top:2px}
+.history{margin-top:10px;padding:10px;border-radius:10px;background:#fff;border:1px solid var(--line)}.history strong{font-size:.67rem}.history p{font-size:.61rem;color:#776e66;margin-top:3px}
+.drawer-overlay{position:fixed;inset:0;background:rgba(18,14,10,.42);z-index:20;display:none}.drawer-overlay.show{display:block}.drawer{position:fixed;left:0;top:0;bottom:0;width:245px;background:#1b1713;color:#fff;z-index:21;transform:translateX(-100%);transition:transform .28s;padding:20px 14px}.drawer.show{transform:none}.drawer-close{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.07);color:#fff}
+.toast{position:fixed;left:50%;bottom:22px;z-index:30;transform:translate(-50%,90px);opacity:0;background:#1f1914;color:#fff;border-radius:999px;padding:10px 15px;font-size:.7rem;transition:transform .3s,opacity .3s}
+@media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{display:none}.main{grid-column:1}.menu-toggle{display:grid;place-items:center}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:750px){.container{width:min(1260px,calc(100% - 24px))}.toolbar{display:block}.search{min-width:0;width:100%}.head{align-items:flex-start;flex-direction:column}.detail-grid{grid-template-columns:1fr 1fr}.profile div{display:none}}
+@media(max-width:450px){.stats{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}.content{padding-bottom:70px}}
+
+    /* ===== COMMON ADMIN SIDEBAR ===== */
+    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+    .sidebar{
+      position:fixed;inset:0 auto 0 0;width:250px;height:100vh;
+      background:#1a1511;color:#fff;padding:20px 14px;display:flex;flex-direction:column;
+      z-index:100;overflow-y:auto
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-height:64px;padding:8px 10px 18px;border-bottom:1px solid rgba(255,255,255,.09)}
+    .brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#171411;font-size:.8rem;font-weight:800}
+    .brand-name,.brand-text{font:700 1.12rem/1 "Playfair Display",serif;color:#fff;white-space:nowrap}
+    .brand-sub{display:block;margin-top:3px;color:#9f978f;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap}
+    .sidebar-label{color:#827a73;text-transform:uppercase;letter-spacing:.14em;font-size:.59rem;font-weight:800;padding:18px 10px 8px}
+    .website-label{margin-top:4px}
+    .nav{display:grid;gap:5px}
+    .nav a,.side-link{
+      min-height:43px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:10px;
+      color:#bcb4ae;font-size:.76rem;font-weight:700;text-decoration:none!important;
+      transition:background .2s,color .2s
+    }
+    .nav a:hover,.nav a.active,.side-link:hover,.side-link.active{background:#2a221c;color:#fff}
+    .nav a.active,.side-link.active{box-shadow:inset 3px 0 0 var(--gold)}
+    .side-icon{width:23px;flex:0 0 23px;text-align:center}
+    .logout{width:100%;min-height:43px;margin-top:auto;border-radius:10px;background:rgba(255,255,255,.05);color:#c9c1bb;font-size:.74rem;font-weight:800;text-align:center}
+    .sidebar-bottom{margin-top:auto}
+    .main{grid-column:2;min-width:0}
+    @media(max-width:800px){
+      .app{display:block}
+      .sidebar{position:static;width:100%;height:auto;padding:10px 12px;overflow:visible}
+      .brand{min-height:58px;padding:5px 6px 10px}
+      .sidebar-label{padding:12px 6px 6px}
+      .nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav a,.side-link{flex:0 0 auto;min-height:40px;padding:0 11px;white-space:nowrap}
+      .sidebar-bottom{margin-top:8px}
+      .logout{display:block}
+      .main{grid-column:auto}
+    }
+
+  </style>
+</head>
+
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">TF</div><div><div class="brand-name">The Flavour</div><span class="brand-sub">Owner Admin</span></div></div>
+  <div class="sidebar-label">Overview</div>
+  <nav class="nav">
+    <a href="admin_dashboard.html"><span class="side-icon">⌂</span>Dashboard</a>
+    <a href="menu_management.html"><span class="side-icon">◫</span>Menu Management</a>
+    <a href="orders.html"><span class="side-icon">🛒</span>Orders</a>
+    <a href="bookings.html"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html" class="active"><span class="side-icon">♟</span>Customers</a>
+  </nav>
+  <div class="sidebar-label website-label">Website</div>
+  <nav class="nav"><a href="index.html"><span class="side-icon">↗</span>View Website</a></nav>
+  <div class="sidebar-bottom"><button class="logout" id="logout">↪ Logout</button></div>
+</aside>
+
+<div class="drawer-overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+<button class="drawer-close" id="drawerClose">✕</button>
+<div class="brand"><span class="brand-mark">TF</span><span><span class="brand-text">The Flavour</span><span class="brand-sub">Owner Admin</span></span></div>
+<div class="sidebar-label">Overview</div>
+<nav class="side-links">
+<a href="admin_dashboard.html" class="side-link"><span class="side-icon">⌂</span>Dashboard</a>
+<a href="menu_management.html" class="side-link"><span class="side-icon">◫</span>Menu Management</a>
+<a href="orders.html" class="side-link"><span class="side-icon">🛒</span>Orders</a>
+<a href="bookings.html" class="side-link"><span class="side-icon">▣</span>Bookings</a>
+    <a href="customers.html" class="side-link"><span class="side-icon">♟</span>Customers</a>
+<a href="#customers" class="side-link active"><span class="side-icon">♙</span>Customers</a>
+</nav>
+<div class="sidebar-label">Website</div><nav class="side-links"><a href="index.html" class="side-link"><span class="side-icon">↗</span>View Website</a></nav>
+<div class="sidebar-bottom"><button class="logout" id="mobileLogout">↪ Logout</button></div>
+</aside>
+
+<main class="main" id="customers">
+<header class="topbar"><div class="container topbar-inner">
+<div style="display:flex;align-items:center;gap:10px"><button class="menu-toggle" id="menuToggle">☰</button><div class="page-title"><h1>Customers</h1><p>View customer history and activity in one place.</p></div></div>
+<div class="profile"><div class="avatar">OW</div><div><strong>Restaurant Owner</strong><span>Administrator</span></div></div>
+</div></header>
+
+<div class="content"><div class="container">
+<section class="head">
+<div><div class="eyebrow">Customer management</div><h2>Know your guests.</h2><p>View customer contact details, orders, bookings and recent activity.</p></div>
+</section>
+
+<section class="stats">
+<div class="stat"><span>Total Customers</span><strong id="totalCustomers">8</strong><small>Registered guests</small></div>
+<div class="stat"><span>Active Customers</span><strong id="activeCustomers">6</strong><small>Recent activity</small></div>
+<div class="stat"><span>Repeat Customers</span><strong id="repeatCustomers">5</strong><small>More than one order</small></div>
+<div class="stat"><span>Top Customer Spend</span><strong id="topSpend">₹4,820</strong><small>Highest total value</small></div>
+</section>
+
+<section class="toolbar">
+<div class="eyebrow" style="margin:0">Customer list · Live database</div>
+<div class="search"><span>⌕</span><input id="search" type="search" placeholder="Search name or phone..."></div>
+</section>
+
+<section class="table-card">
+<div class="card-head"><h3>All Customers</h3><span id="result">Showing all customers</span></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Bookings</th><th>Total Spend</th><th>Last Activity</th><th>Action</th></tr></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+<div class="detail" id="detail"></div>
+</section>
+</div></div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let customers=[];
+
+const tbody=document.getElementById("tbody"),
+      result=document.getElementById("result"),
+      search=document.getElementById("search"),
+      detail=document.getElementById("detail"),
+      totalCustomers=document.getElementById("totalCustomers"),
+      activeCustomers=document.getElementById("activeCustomers"),
+      repeatCustomers=document.getElementById("repeatCustomers"),
+      topSpend=document.getElementById("topSpend");
+
+function initials(name){
+  return String(name||"Guest").split(" ").filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+}
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function money(v){
+  return `₹${Math.round(Number(v||0)).toLocaleString("en-IN")}`;
+}
+
+function renderStats(){
+  totalCustomers.textContent=customers.length;
+  activeCustomers.textContent=customers.filter(c=>c.orders_count>0 || c.bookings_count>0).length;
+  repeatCustomers.textContent=customers.filter(c=>Number(c.orders_count||0)>1).length;
+  const max=customers.reduce((m,c)=>Math.max(m,Number(c.total_spend||0)),0);
+  topSpend.textContent=money(max);
+}
+
+function render(){
+  const q=search.value.trim().toLowerCase();
+  const visible=customers.filter(c=>{
+    const name=String(c.name||"").toLowerCase();
+    const phone=String(c.phone||"").replace(/\s/g,"");
+    const query=q.replace(/\s/g,"");
+    return !q || name.includes(q) || phone.includes(query);
+  });
+
+  result.textContent=`Showing ${visible.length} customer${visible.length===1?"":"s"}`;
+  tbody.innerHTML="";
+
+  if(!visible.length){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:35px;color:#847a72">No customers found.</td></tr>';
+    return;
+  }
+
+  visible.forEach(c=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>
+        <div class="customer">
+          <div class="avatar-sm">${initials(c.name)}</div>
+          <div><strong>${esc(c.name)}</strong><span>Restaurant customer</span></div>
+        </div>
+      </td>
+      <td>${esc(c.phone)}</td>
+      <td class="metric">${Number(c.orders_count||0)}</td>
+      <td class="metric">${Number(c.bookings_count||0)}</td>
+      <td class="metric">${money(c.total_spend)}</td>
+      <td class="muted">${esc(c.last_activity || "No activity")}</td>
+      <td><button class="action view" type="button">View</button></td>
+    `;
+    tr.querySelector(".view").onclick=()=>showDetail(c);
+    tbody.appendChild(tr);
+  });
+
+  renderStats();
+}
+
+function showDetail(c){
+  detail.classList.add("show");
+  detail.innerHTML=`
+    <div class="detail-head">
+      <div>
+        <div class="eyebrow">Customer details</div>
+        <strong style="font-size:1rem">${esc(c.name)}</strong>
+      </div>
+      <button class="action" id="close" type="button">✕ Close</button>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-box"><span>Phone</span><strong>${esc(c.phone)}</strong></div>
+      <div class="detail-box"><span>Total Orders</span><strong>${Number(c.orders_count||0)}</strong></div>
+      <div class="detail-box"><span>Total Bookings</span><strong>${Number(c.bookings_count||0)}</strong></div>
+      <div class="detail-box"><span>Total Spend</span><strong>${money(c.total_spend)}</strong></div>
+    </div>
+    <div class="history">
+      <strong>Recent activity</strong>
+      <p>${esc(c.last_activity ? `Last activity: ${c.last_activity}` : "No recent activity.")}</p>
+    </div>
+  `;
+  document.getElementById("close").onclick=()=>detail.classList.remove("show");
+}
+
+async function loadCustomers(){
+  try{
+    const response=await fetch("/api/customers",{headers:{"Accept":"application/json"}});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||"Could not load customers.");
+    customers=Array.isArray(data)?data:[];
+    render();
+  }catch(error){
+    console.error(error);
+    tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:35px;color:#9b4a41">Could not load live customers.<br><small>${esc(error.message)}</small></td></tr>`;
+  }
+}
+
+search.addEventListener("input",render);
+
+function logout(){
+  if(confirm("Log out of the admin dashboard?")) location.href="admin_login.html";
+}
+document.getElementById("logout").onclick=logout;
+document.getElementById("mobileLogout").onclick=logout;
+
+const drawer=document.getElementById("drawer"),overlay=document.getElementById("overlay");
+document.getElementById("menuToggle").onclick=()=>{drawer.classList.add("show");overlay.classList.add("show")};
+document.getElementById("drawerClose").onclick=()=>{drawer.classList.remove("show");overlay.classList.remove("show")};
+overlay.onclick=()=>{drawer.classList.remove("show");overlay.classList.remove("show")};
+
+loadCustomers();
+setInterval(loadCustomers,30000);
+
+</script>
+</body>
+</html>
