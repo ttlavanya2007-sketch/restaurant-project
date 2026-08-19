@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = Path("/tmp/theflavour_uploads")
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
-
+STORAGE_BUCKET = "food-images"
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-only-change-me")
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -154,13 +154,13 @@ def health():
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 @app.post("/api/upload-image")
 def upload_image():
     if "image" not in request.files:
         return jsonify({"success": False, "error": "No image file received."}), 400
 
     file = request.files["image"]
+
     if not file or not file.filename:
         return jsonify({"success": False, "error": "Please select an image."}), 400
 
@@ -170,18 +170,41 @@ def upload_image():
             "error": "Only PNG, JPG, JPEG and WEBP images are allowed."
         }), 400
 
-    # Local fallback for development. On Vercel, use Supabase Storage for permanent images.
     extension = file.filename.rsplit(".", 1)[1].lower()
-    safe_name = secure_filename(f"{os.urandom(12).hex()}.{extension}")
-    file_path = UPLOAD_FOLDER / safe_name
-    file.save(file_path)
+    safe_name = secure_filename(
+        f"{os.urandom(12).hex()}.{extension}"
+    )
 
-    return jsonify({
-        "success": True,
-        "message": "Image uploaded successfully.",
-        "image_url": f"/uploads/{safe_name}",
-    }), 201
+    storage_path = f"menu/{safe_name}"
 
+    try:
+        file_bytes = file.stream.read()
+
+        supabase.storage.from_(STORAGE_BUCKET).upload(
+            storage_path,
+            file_bytes,
+            {
+                "content-type": file.mimetype or f"image/{extension}",
+                "cache-control": "3600",
+                "upsert": "false",
+            }
+        )
+
+        public_url = supabase.storage.from_(
+            STORAGE_BUCKET
+        ).get_public_url(storage_path)
+
+        return jsonify({
+            "success": True,
+            "message": "Image uploaded successfully.",
+            "image_url": public_url
+        }), 201
+
+    except Exception as exc:
+        return jsonify({
+            "success": False,
+            "error": f"Could not upload image: {exc}"
+        }), 500
 
 # =========================================================
 # ADMIN AUTHENTICATION
